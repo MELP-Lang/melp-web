@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MELP özellikleri — Çok dilli yazım, EOK binary güvenliği, LLVM native, spawn/channel, öz-derleme hedefi.">
+  <title>Özellikler — MELP</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+          <rect width="64" height="64" rx="10" fill="#21252b"/>
+          <text x="32" y="44" font-family="monospace" font-size="28" font-weight="bold"
+                text-anchor="middle" fill="#528bff">M</text>
+          <rect x="8" y="50" width="48" height="3" rx="1.5" fill="#528bff" opacity="0.4"/>
+        </svg>
+        MELP
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Ana Sayfa</a></li>
+        <li><a href="ozellikler.html" class="active">Özellikler</a></li>
+        <li><a href="kurulum.html">Kurulum</a></li>
+        <li><a href="docs.html">Dokümanlar</a></li>
+        <li><a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn-nav">Hemen Dene →</a></li>
+      </ul>
+      <div class="theme-toggle">
+        <button class="theme-btn" data-theme="dark" title="Koyu tema" aria-label="Koyu tema">🌙</button>
+        <button class="theme-btn" data-theme="light" title="Açık tema" aria-label="Açık tema">☀️</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section style="padding-top:3.5rem;padding-bottom:1rem;">
+      <span class="section-label">Özellikler</span>
+      <h1 style="font-size:2.4rem;margin-bottom:0.5rem;">MELP Ne Yapabilir?</h1>
+      <p class="muted">Dil tasarımından binary güvenliğine — temel özellikler.</p>
+    </section>
+
+    <!-- ====================================================
+         1. ÇOK DİLLİ YAZIM
+         ==================================================== -->
+    <section class="feature-section">
+      <h2>🌍 1. Çok Dilli, Çok Sentaksli Yazım</h2>
+      <p>
+        MELP'te program mantığı dilden ve sözdizimi stilinden bağımsızdır. Aynı derleyici Türkçe,
+        İngilizce, Rusça veya Japonca kaynak dosyasını okuyabilir. Yeni bir dil eklemek için tek
+        yapılması gereken bir <code class="inline">keywords.json</code> dosyası yazmaktır —
+        derleyici kaynak koduna dokunulmaz.
+      </p>
+      <p>Bunun yanı sıra MELP üç farklı sözdizimi stilini destekler:</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0 2rem;">
+        <div class="code-panel">
+          <div class="code-panel-header"><span class="lang-dot"></span>Doğal MELP (varsayılan)</div>
+          <pre><code><span class="kw">function</span> <span class="fn">add</span>(a; b)
+    <span class="kw">return</span> a + b
+<span class="kw">end function</span></code></pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-header"><span class="lang-dot" style="background:var(--warning)"></span>C-Stili</div>
+          <pre><code><span class="kw">function</span> <span class="fn">add</span>(a; b) {
+    <span class="kw">return</span> a + b
+}</code></pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-header"><span class="lang-dot" style="background:var(--success)"></span>Python-Stili</div>
+          <pre><code><span class="kw">function</span> <span class="fn">add</span>(a; b):
+    <span class="kw">return</span> a + b</code></pre>
+        </div>
+      </div>
+
+      <p class="muted">Kanonik kaynak: <code class="inline">/ORTAK/dil/&lt;dil_kodu&gt;/keywords.json</code></p>
+
+      <div class="code-compare">
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="lang-dot"></span>İngilizce
+          </div>
+          <pre><code><span class="kw">function</span> <span class="fn">greet</span>(name)
+    <span class="fn">print</span>(<span class="str">"Hello, "</span> + name)
+<span class="kw">end function</span>
+
+<span class="kw">function</span> <span class="fn">main</span>()
+    <span class="fn">greet</span>(<span class="str">"World"</span>)
+<span class="kw">end function</span></code></pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="lang-dot" style="background:var(--accent-alt)"></span>Türkçe
+          </div>
+          <pre><code><span class="kw">fonksiyon</span> <span class="fn">selamla</span>(isim)
+    <span class="fn">yaz</span>(<span class="str">"Merhaba, "</span> + isim)
+<span class="kw">fonksiyon sonu</span>
+
+<span class="kw">fonksiyon</span> <span class="fn">giriş</span>()
+    <span class="fn">selamla</span>(<span class="str">"Dünya"</span>)
+<span class="kw">fonksiyon sonu</span></code></pre>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <p>
+          <strong>Tasarım İlkesi:</strong> Dil değişikliği algoritmanın kendisini değiştirmez.
+          Normalizer, kaynak dildeki anahtar kelimeleri tek biçimli iç temsile (<code class="inline">pmlp</code>)
+          çevirir ve derleyicinin geri kalanı yalnızca bu iç temsili görür.
+        </p>
+      </div>
+    </section>
+
+    <!-- ====================================================
+         2. MEMORY SAFE — GC'SİZ
+         ==================================================== -->
+    <section class="feature-section">
+      <h2>🛡️ 2. Memory Safe — GC'siz, Annotation'sız</h2>
+      <p>
+        MELP, varsayılan olarak global durum oluşturmaya izin vermez. Bu tek kural
+        sayesinde bellek sızıntısı derleyici düzeyinde imkânsız hale gelir —
+        ne çalışma zamanı Garbage Collector ne de Rust'ın borrow checker'ı gibi
+        manuel annotation sistemi gerekir.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Dil</th>
+              <th>Hız</th>
+              <th>Memory Safety</th>
+              <th>Ekstra Yük</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>C / C++</td>
+              <td><span class="check">✅</span></td>
+              <td><span class="cross">❌ Manuel</span></td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>Java / Python</td>
+              <td><span class="cross">❌ GC</span></td>
+              <td><span class="check">✅</span></td>
+              <td>Garbage Collector</td>
+            </tr>
+            <tr>
+              <td>Rust</td>
+              <td><span class="check">✅</span></td>
+              <td><span class="check">✅</span></td>
+              <td>Borrow checker annotation</td>
+            </tr>
+            <tr class="highlight-row">
+              <td>MELP</td>
+              <td><span class="check">✅</span></td>
+              <td><span class="check">✅</span></td>
+              <td>Hiçbiri — stateless-first</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        <p>
+          <strong>Stateless-First:</strong> Varsayılan tercih saf ve kısa ömürlü işlemlerdir.
+          Global durum gerekiyorsa bunun maliyeti ve etkisi açık ve bilinçli olmalıdır.
+        </p>
+      </div>
+    </section>
+
+    <!-- ====================================================
+         3. EOK — EN ÖNEMLİ BÖLÜM
+         ==================================================== -->
+    <section class="feature-section">
+      <h2>🔐 3. Yapısal Binary Güvenliği — EOK</h2>
+      <p style="font-size:1.1rem;font-weight:600;color:var(--text-primary);margin-bottom:1.5rem;">
+        Binary'e sahip olmak, mantığa sahip olmak anlamına gelmez.
+      </p>
+      <p>
+        Klasik derleyiciler kaynak kodunun sembolik yapısını (fonksiyon adları, kontrol akışı,
+        sabit değerler) binary içinde korur. IDA Pro, Ghidra veya benzeri bir araç bu binary'i
+        açtığında programın mantığı büyük ölçüde okunabilir.
+      </p>
+      <p>
+        MELP farklı çalışır. EOK (Endeksle Örtülü Koruma) mimarisinde binary, gerçek semboller
+        yerine yalnızca indeks numaraları içerir. Bu indekslerin anlam tablosuna — "anahtar"a —
+        sahip olmadan binary çalıştırılamaz, tersine mühendislik yapılamaz.
+      </p>
+
+      <div class="eok-box">
+        <div style="margin-bottom:0.75rem;"><span class="label-red">❌ Klasik binary:</span></div>
+        <div style="margin-left:1rem;">
+          Kaynak → [<span class="label-red">fonksiyon adları + veri + kontrol akışı</span>] → IDA Pro ile okunabilir
+        </div>
+        <div style="margin:1rem 0 0.75rem;"><span class="label-green">✅ MELP binary (EOK):</span></div>
+        <div style="margin-left:1rem;">
+          Kaynak → [<span class="label-blue">sadece indeks numaraları</span>] → anahtarsız = <strong>anlamsız</strong>
+        </div>
+      </div>
+
+      <h3 style="margin-top:2rem;">Saldırı Senaryoları</h3>
+
+      <div class="table-wrap">
+        <table class="attack-table">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Saldırı</th>
+              <th style="text-align:left;">Sonuç</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Binary ele geçirildi, anahtar yok</td>
+              <td>Yürütülemez</td>
+            </tr>
+            <tr>
+              <td>Memory dump (çalışırken)</td>
+              <td>Bellekte yalnızca indeksler — veri okunaksız</td>
+            </tr>
+            <tr>
+              <td>IDA Pro / Ghidra analizi</td>
+              <td>Kontrol akışı ve semboller okunaksız</td>
+            </tr>
+            <tr>
+              <td>Binary kopyalanıp farklı ortamda çalıştırıldı</td>
+              <td>Anahtar eşleşmediği için başlatılamaz</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box" style="margin-top:2rem;">
+        <p>
+          <strong>Hedef Kitle:</strong> Savunma sanayi, bankacılık ve kritik altyapı yazılımları
+          için tasarlanmıştır. Fikri mülkiyet koruması iş modelinin merkezinde olan kuruluşlar
+          için EOK doğrudan bir değer önerisidir.
+        </p>
+      </div>
+
+      <h3 style="margin-top:2.5rem;">EFBO — Kuantum Dirençli Koruma <span class="badge badge-yellow" style="font-size:0.75rem;vertical-align:middle;">Araştırma</span></h3>
+      <p>
+        EOK'un üzerine inşa edilen EFBO (Extended FBO), post-quantum şifreleme yöntemleriyle
+        FBO dispatch tablosunu korumayı hedefler. Klasik şifreleme algoritmalarının kuantum
+        bilgisayarlar karşısında kırılgan olacağı varsayımına karşı proaktif bir mimari yanıttır.
+      </p>
+      <div class="info-box research">
+        <p>
+          <strong>Durum:</strong> EFBO aktif araştırma aşamasındadır. Beta sonrası yol haritasında
+          yer almaktadır — mevcut EOK koruması bundan bağımsız olarak çalışır.
+        </p>
+      </div>
+    </section>
+
+    <!-- ====================================================
+         4. LLVM NATIVE BINARY
+         ==================================================== -->
+    <section class="feature-section">
+      <h2>⚡ 4. LLVM Native Binary</h2>
+      <p>
+        MELP sözdizimsel bir deney değildir. Kaynak kod LLVM IR'e derlenir,
+        ardından <code class="inline">llc</code> ve platform linker'ı aracılığıyla
+        gerçek bir ELF binary üretilir. GC yok, interpreter yok, overhead yok.
+      </p>
+      <div class="code-panel" style="max-width:600px;">
+        <div class="code-panel-header">
+          <span class="lang-dot"></span>Terminal
+        </div>
+        <pre><code><span class="cm"># LLVM IR görüntüle</span>
+bin/run_melp ornek.mlp --ir
+
+<span class="cm"># Native binary üret</span>
+melp_compiler ornek.mlp -o a.out
+
+<span class="cm"># Çalıştır — lli veya interpreter gerektirmez</span>
+./a.out</code></pre>
+      </div>
+      <p style="margin-top:1.5rem;">
+        Üretilen binary, <code class="inline">lli</code> veya herhangi bir çalışma zamanı
+        olmadan doğrudan işletim sistemi tarafından çalıştırılır.
+        C/C++ ile karşılaştırılabilir performans hedefleri için LLVM optimizer
+        geçişleri uygulanabilir.
+      </p>
+    </section>
+
+    <!-- ====================================================
+         5. SPAWN + CHANNEL
+         ==================================================== -->
+    <section class="feature-section">
+      <h2>🔄 5. Spawn + Channel</h2>
+      <p>
+        MELP, eşzamanlılık için dil düzeyinde <code class="inline">spawn</code> ve
+        <code class="inline">channel</code> desteği sunar. Paylaşılan durum yerine
+        mesaj geçişi modeli benimsenmiştir — bu yaklaşım stateless-first felsefesiyle tutarlıdır.
+      </p>
+      <div class="code-compare">
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="lang-dot"></span>İngilizce — Spawn
+          </div>
+          <pre><code><span class="kw">spawn</span>
+    <span class="fn">print</span>(<span class="str">"Paralel görev çalışıyor"</span>)
+<span class="kw">end spawn</span></code></pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="lang-dot" style="background:var(--accent-alt)"></span>Türkçe — Spawn
+          </div>
+          <pre><code><span class="kw">başlat</span>
+    <span class="fn">yaz</span>(<span class="str">"Paralel görev çalışıyor"</span>)
+<span class="kw">başlat sonu</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================
+         6. ÖZ-DERLEME HEDEFİ
+         ==================================================== -->
+    <section class="feature-section">
+      <h2>🎯 6. Öz-Derleme Hedefi</h2>
+      <p>
+        v1.0 milstonunda MELP derleyicisi kendini MELP ile derleyecektir.
+        Bu hedefe "self-hosting" denir ve bir dilin olgunluk göstergesidir.
+        Stage 0 (C++ → C++) ve Stage 1 (MELP → C++) aşamalarından sonra
+        Stage 2 (MELP → MELP) tamamlandığında bu hedef gerçekleşmiş olacak.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Aşama</th>
+              <th>Kaynak</th>
+              <th>Hedef</th>
+              <th>Durum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Stage 0</td>
+              <td>C++</td>
+              <td>C++</td>
+              <td><span class="check">✅ Tamamlandı</span></td>
+            </tr>
+            <tr>
+              <td>Stage 1</td>
+              <td>.mlp</td>
+              <td>C++ (bootstrap)</td>
+              <td><span class="badge badge-blue" style="font-size:0.8rem;">Geliştirme</span></td>
+            </tr>
+            <tr>
+              <td>Stage 2</td>
+              <td>.mlp</td>
+              <td>.mlp (self-hosting)</td>
+              <td><span class="badge badge-yellow" style="font-size:0.8rem;">Planlı</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========== ALT CTA ========== -->
+    <section class="cta-section">
+      <h2>Deneyin</h2>
+      <p>Tüm bu özellikleri tarayıcıdan, kurulum yapmadan test edebilirsiniz.</p>
+      <div class="btn-group" style="justify-content:center;">
+        <a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn btn-primary">Web IDE'yi Aç →</a>
+        <a href="kurulum.html" class="btn btn-outline">Yerel Kurulum</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <p>© 2026 MELP. MIT Lisansı.</p>
+    <p style="margin-top:0.5rem;">
+      <a href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://melp.dev">melp.dev</a>
+    </p>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const links  = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+    // Theme toggle
+    (function() {
+      const root  = document.documentElement;
+      const saved = localStorage.getItem('melp-theme') || 'dark';
+      root.setAttribute('data-theme', saved);
+      function sync(t) {
+        document.querySelectorAll('.theme-btn').forEach(b =>
+          b.classList.toggle('active', b.dataset.theme === t));
+      }
+      sync(saved);
+      document.querySelectorAll('.theme-btn').forEach(btn =>
+        btn.addEventListener('click', () => {
+          const t = btn.dataset.theme;
+          root.setAttribute('data-theme', t);
+          localStorage.setItem('melp-theme', t);
+          sync(t);
+        })
+      );
+    })();
+  </script>
+
+</body>
+</html>

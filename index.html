@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MELP — Kendi doğal dilinizde yazın. GC yok, borrow checker yok, memory safe. LLVM native binary.">
+  <title>MELP — Doğal Dil, Native Hız</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+          <rect width="64" height="64" rx="10" fill="#21252b"/>
+          <text x="32" y="44" font-family="monospace" font-size="28" font-weight="bold"
+                text-anchor="middle" fill="#528bff">M</text>
+          <rect x="8" y="50" width="48" height="3" rx="1.5" fill="#528bff" opacity="0.4"/>
+        </svg>
+        MELP
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html" class="active">Ana Sayfa</a></li>
+        <li><a href="ozellikler.html">Özellikler</a></li>
+        <li><a href="kurulum.html">Kurulum</a></li>
+        <li><a href="docs.html">Dokümanlar</a></li>
+        <li><a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn-nav">Hemen Dene →</a></li>
+      </ul>
+      <div class="theme-toggle">
+        <button class="theme-btn" data-theme="dark" title="Koyu tema" aria-label="Koyu tema">🌙</button>
+        <button class="theme-btn" data-theme="light" title="Açık tema" aria-label="Açık tema">☀️</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ========== HERO ========== -->
+    <section class="hero">
+      <div class="hero-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+          <rect width="64" height="64" rx="10" fill="#21252b"/>
+          <text x="32" y="44" font-family="monospace" font-size="28" font-weight="bold"
+                text-anchor="middle" fill="#528bff">M</text>
+          <rect x="8" y="50" width="48" height="3" rx="1.5" fill="#528bff" opacity="0.4"/>
+        </svg>
+      </div>
+      <h1>Kendi doğal dilinizde yazın.</h1>
+      <p class="hero-subtitle">GC yok &nbsp;·&nbsp; Borrow checker yok &nbsp;·&nbsp; Memory safe.</p>
+      <div class="badge-row">
+        <span class="badge badge-blue">GC Yok</span>
+        <span class="badge badge-teal">Annotation Yok</span>
+        <span class="badge badge-green">Memory Safe</span>
+        <span class="badge badge-yellow">LLVM Native</span>
+      </div>
+      <div class="btn-group" style="justify-content:center;">
+        <a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn btn-primary">Hemen Dene →</a>
+        <a href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener" class="btn btn-outline">GitHub →</a>
+      </div>
+    </section>
+
+    <!-- ========== NEDEN MELP? ========== -->
+    <section>
+      <div class="section-header">
+        <span class="section-label">Karşılaştırma</span>
+        <h2>Neden MELP?</h2>
+        <p>Hız, güvenlik ve basitlik — üçü bir arada.</p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Dil</th>
+              <th>Hız</th>
+              <th>Memory Safety</th>
+              <th>Basitlik</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>C / C++</td>
+              <td><span class="check">✅</span></td>
+              <td><span class="cross">❌</span></td>
+              <td><span class="cross">❌</span></td>
+            </tr>
+            <tr>
+              <td>Java / Python</td>
+              <td><span class="cross">❌</span> <small style="color:var(--text-muted)">(GC)</small></td>
+              <td><span class="check">✅</span></td>
+              <td><span class="check">✅</span></td>
+            </tr>
+            <tr>
+              <td>Rust</td>
+              <td><span class="check">✅</span></td>
+              <td><span class="check">✅</span></td>
+              <td><span class="cross">❌</span></td>
+            </tr>
+            <tr class="highlight-row">
+              <td>MELP</td>
+              <td><span class="check">✅</span></td>
+              <td><span class="check">✅</span></td>
+              <td><span class="check">✅</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted" style="text-align:center;margin-top:1rem;font-style:italic;">
+        "MELP stateless-first mimarisiyle memory güvenliğini ne GC ne de borrow checker gerektirmeden sağlar."
+      </p>
+    </section>
+
+    <!-- ========== 3 ÖZELLİK KARTI ========== -->
+    <section>
+      <div class="section-header">
+        <span class="section-label">Özellikler</span>
+        <h2>MELP Ne Sunar?</h2>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">🌍</div>
+          <h3>Çok Dilli, Çok Sentaks</h3>
+          <p>
+            Türkçe, İngilizce, Rusça — aynı derleyici. Bir <code class="inline">keywords.json</code>
+            dosyası yeni bir dil eklemek için yeterli. Ayrıca C-stili, Python-stili veya
+            doğal MELP stili sözdizimi arasında seçim yapabilirsiniz.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔒</div>
+          <h3>Yapısal Binary Güvenliği (EOK)</h3>
+          <p>
+            Binary'e sahip olmak mantığa sahip olmak anlamına gelmez. MELP ikilileri
+            gerçek semboller yerine indeks numaraları içerir — anahtarsız çalıştırılamaz,
+            anahtarsız anlaşılamaz.
+          </p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚡</div>
+          <h3>LLVM Native Binary</h3>
+          <p>
+            GC yok, overhead yok. MELP doğrudan LLVM IR üretir —
+            C/C++ ile eşdeğer native hız. Sözdizimsel bir deney değil,
+            üretim kalitesinde bir derleyici.
+          </p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:1rem;">
+        <a href="ozellikler.html" class="btn btn-outline">Tüm Özellikleri Gör →</a>
+      </div>
+    </section>
+
+    <!-- ========== MERHABA DÜNYA ========== -->
+    <section>
+      <div class="section-header">
+        <span class="section-label">Sözdizimi</span>
+        <h2>Aynı Program, İki Dil</h2>
+        <p>Kod mantığı değişmez — yalnızca anahtar kelimeler değişir.</p>
+      </div>
+      <div class="code-compare">
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="lang-dot"></span>
+            İngilizce (English)
+          </div>
+          <pre><code><span class="kw">function</span> <span class="fn">main</span>()
+    <span class="fn">print</span>(<span class="str">"Hello World!"</span>)
+<span class="kw">end function</span></code></pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="lang-dot" style="background:var(--accent-alt)"></span>
+            Türkçe
+          </div>
+          <pre><code><span class="kw">fonksiyon</span> <span class="fn">giriş</span>()
+    <span class="fn">yaz</span>(<span class="str">"Merhaba Dünya!"</span>)
+<span class="kw">fonksiyon sonu</span></code></pre>
+        </div>
+      </div>
+      <div class="code-compare" style="margin-top:1rem;">
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="lang-dot"></span>
+            Fonksiyon — İngilizce
+          </div>
+          <pre><code><span class="typ">numeric</span> <span class="kw">function</span> <span class="fn">add</span>(a; b)
+    <span class="kw">return</span> a + b
+<span class="kw">end function</span>
+
+<span class="kw">function</span> <span class="fn">main</span>()
+    <span class="typ">numeric</span> result = <span class="fn">add</span>(<span class="num">3</span>; <span class="num">5</span>)
+    <span class="fn">print</span>(result)
+<span class="kw">end function</span></code></pre>
+        </div>
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="lang-dot" style="background:var(--accent-alt)"></span>
+            Fonksiyon — Türkçe
+          </div>
+          <pre><code><span class="typ">sayısal</span> <span class="kw">fonksiyon</span> <span class="fn">topla</span>(a; b)
+    <span class="kw">döndür</span> a + b
+<span class="kw">fonksiyon sonu</span>
+
+<span class="kw">fonksiyon</span> <span class="fn">giriş</span>()
+    <span class="typ">sayısal</span> sonuç = <span class="fn">topla</span>(<span class="num">3</span>; <span class="num">5</span>)
+    <span class="fn">yaz</span>(sonuç)
+<span class="kw">fonksiyon sonu</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ALT CTA ========== -->
+    <section class="cta-section">
+      <h2>Hazır mısınız?</h2>
+      <p>Tarayıcıda hemen deneyin — kurulum gerekmez.</p>
+      <div class="btn-group" style="justify-content:center;">
+        <a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn btn-primary">Web IDE'yi Aç</a>
+        <a href="kurulum.html" class="btn btn-outline">VS Code Uzantısını İndir</a>
+        <a href="docs.html" class="btn btn-outline">Dokümantasyon</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <p>© 2026 MELP. MIT Lisansı.</p>
+    <p style="margin-top:0.5rem;">
+      <a href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://melp.dev">melp.dev</a>
+    </p>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const toggle = document.getElementById('navToggle');
+    const links  = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+    // Theme toggle
+    (function() {
+      const root  = document.documentElement;
+      const saved = localStorage.getItem('melp-theme') || 'dark';
+      root.setAttribute('data-theme', saved);
+      function sync(t) {
+        document.querySelectorAll('.theme-btn').forEach(b =>
+          b.classList.toggle('active', b.dataset.theme === t));
+      }
+      sync(saved);
+      document.querySelectorAll('.theme-btn').forEach(btn =>
+        btn.addEventListener('click', () => {
+          const t = btn.dataset.theme;
+          root.setAttribute('data-theme', t);
+          localStorage.setItem('melp-theme', t);
+          sync(t);
+        })
+      );
+    })();
+  </script>
+
+</body>
+</html>

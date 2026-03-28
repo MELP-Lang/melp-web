@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MELP dil referansı — sözdizimi, tipler, kontrol akışı, fonksiyonlar ve daha fazlası.">
+  <title>Dokümantasyon — MELP</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+          <rect width="64" height="64" rx="10" fill="#21252b"/>
+          <text x="32" y="44" font-family="monospace" font-size="28" font-weight="bold"
+                text-anchor="middle" fill="#528bff">M</text>
+          <rect x="8" y="50" width="48" height="3" rx="1.5" fill="#528bff" opacity="0.4"/>
+        </svg>
+        MELP
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Ana Sayfa</a></li>
+        <li><a href="ozellikler.html">Özellikler</a></li>
+        <li><a href="kurulum.html">Kurulum</a></li>
+        <li><a href="docs.html" class="active">Dokümanlar</a></li>
+        <li><a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn-nav">Hemen Dene →</a></li>
+      </ul>
+      <div class="theme-toggle">
+        <button class="theme-btn" data-theme="dark" title="Koyu tema" aria-label="Koyu tema">🌙</button>
+        <button class="theme-btn" data-theme="light" title="Açık tema" aria-label="Açık tema">☀️</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main style="max-width:1100px;">
+    <div class="docs-layout">
+
+      <!-- ========== SIDEBAR ========== -->
+      <aside class="docs-sidebar">
+        <h4>Başlarken</h4>
+        <ul>
+          <li><a href="#giris">Giriş</a></li>
+          <li><a href="#derleme-yolu">Derleme Yolu</a></li>
+          <li><a href="#temel-kurallar">Temel Kurallar</a></li>
+        </ul>
+
+        <h4>Dil Referansı</h4>
+        <ul>
+          <li><a href="#tipler">Tipler</a></li>
+          <li><a href="#degiskenler">Değişkenler</a></li>
+          <li><a href="#operatorler">Operatörler</a></li>
+          <li><a href="#kosullar">Koşullar</a></li>
+          <li><a href="#donguler">Döngüler</a></li>
+          <li><a href="#fonksiyonlar">Fonksiyonlar</a></li>
+          <li><a href="#struct">Struct</a></li>
+          <li><a href="#listeler">Listeler</a></li>
+          <li><a href="#hata-yonetimi">Hata Yönetimi</a></li>
+          <li><a href="#esza">Eşzamanlılık</a></li>
+        </ul>
+
+        <h4>Çok Dilli</h4>
+        <ul>
+          <li><a href="#turkce-ref">Türkçe Referans</a></li>
+          <li><a href="#dil-ekleme">Yeni Dil Ekleme</a></li>
+        </ul>
+
+        <h4>Bağlantılar</h4>
+        <ul>
+          <li><a href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener">GitHub →</a></li>
+          <li><a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener">Web IDE →</a></li>
+        </ul>
+      </aside>
+
+      <!-- ========== DOCS İÇERİK ========== -->
+      <article class="docs-content">
+
+        <h1 id="giris" style="font-size:2.2rem;margin-bottom:0.5rem;">MELP Dil Referansı</h1>
+        <p class="muted" style="margin-bottom:2rem;">
+          Kanonik kaynak: <code class="inline">ORTAK/dil/</code> &nbsp;|&nbsp;
+          Versiyon: Stage 1 &nbsp;|&nbsp;
+          Güncelleme: 2026-03
+        </p>
+
+        <!-- DERLEME YOLU -->
+        <h2 id="derleme-yolu">Derleme Yolu</h2>
+        <p>
+          Stage 1'de <code class="inline">.mlp</code> dosyaları normalizer sarmalayıcısı
+          üzerinden derlenir. Kullanıcı yazdığı kaynak (boşluklu anahtar kelimeler) önce
+          iç temsile (<code class="inline">pmlp</code>) çevrilir, ardından derleyici bu
+          iç temsili işler.
+        </p>
+        <pre><code># Çalıştır
+bin/run_melp program.mlp
+
+# LLVM IR görüntüle
+bin/run_melp program.mlp --ir
+
+# Native binary üret
+bin/melp_compiler program.mlp -o program</code></pre>
+
+        <!-- TEMEL KURALLAR -->
+        <h2 id="temel-kurallar">Temel Kurallar</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Kural</th><th>Doğru ✅</th><th>Yanlış ❌</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Parametre ayırıcı</td><td><code class="inline">func(a; b; c)</code></td><td><code class="inline">func(a, b, c)</code></td></tr>
+              <tr><td>Dizi literali</td><td><code class="inline">[1; 2; 3]</code></td><td><code class="inline">[1, 2, 3]</code></td></tr>
+              <tr><td>Satır sonu yok</td><td><code class="inline">x = 42</code></td><td><code class="inline">x = 42;</code></td></tr>
+              <tr><td>Blok sonlandırıcı</td><td><code class="inline">end function</code></td><td><code class="inline">end_function</code></td></tr>
+              <tr><td>if → then zorunlu</td><td><code class="inline">if x &gt; 0 then</code></td><td><code class="inline">if x &gt; 0</code></td></tr>
+              <tr><td>else if</td><td><code class="inline">else if x &gt; 0 then</code></td><td><code class="inline">elif x &gt; 0</code></td></tr>
+              <tr><td>Döngüden çıkış</td><td><code class="inline">exit</code></td><td><code class="inline">break</code></td></tr>
+              <tr><td>Yorum</td><td><code class="inline">-- yorum</code></td><td><code class="inline">// yorum</code></td></tr>
+              <tr><td>Mantıksal operatör</td><td><code class="inline">and</code>, <code class="inline">or</code>, <code class="inline">not</code></td><td><code class="inline">&amp;&amp;</code>, <code class="inline">||</code>, <code class="inline">!</code></td></tr>
+              <tr><td>Modulo</td><td><code class="inline">x mod y</code></td><td><code class="inline">x % y</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TİPLER -->
+        <h2 id="tipler">Tipler</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>İngilizce</th><th>Türkçe</th><th>Açıklama</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code class="inline">numeric</code></td><td><code class="inline">sayısal</code></td><td>Tam sayı veya ondalık (derleyici seçer)</td></tr>
+              <tr><td><code class="inline">string</code></td><td><code class="inline">metin</code></td><td>Metin değeri</td></tr>
+              <tr><td><code class="inline">boolean</code></td><td><code class="inline">mantıksal</code></td><td><code class="inline">true</code> / <code class="inline">false</code></td></tr>
+              <tr><td><code class="inline">none</code></td><td><code class="inline">hiçbir</code></td><td>Dönüş değeri olmayan fonksiyon</td></tr>
+              <tr><td><code class="inline">null</code></td><td><code class="inline">boş</code></td><td>Null / boş değer</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre><code>numeric x = 42
+numeric pi = 3,14
+string name = "MELP"
+boolean ok = true
+string empty = null
+
+-- Türkçe karşılıkları:
+-- sayısal x = 42
+-- sayısal pi = 3,14
+-- metin isim = "MELP"
+-- mantıksal tamam = doğru
+-- metin boşDeğer = boş</code></pre>
+
+        <!-- DEĞİŞKENLER -->
+        <h2 id="degiskenler">Değişkenler</h2>
+        <pre><code>numeric count = 10
+string lang = "MELP"
+boolean enabled = true
+
+-- Yeniden atama — tip anahtarı yok
+count = count + 1
+lang = "Turkish MELP"
+
+-- Sabit
+const numeric MAX = 1000
+const string APP = "MELP"</code></pre>
+
+        <!-- OPERATÖRLER -->
+        <h2 id="operatorler">Operatörler</h2>
+        <h3>Aritmetik</h3>
+        <pre><code>x + y
+x - y
+x * y
+x / y
+x mod y     -- modulo (% değil)</code></pre>
+
+        <h3>Karşılaştırma</h3>
+        <pre><code>x == y
+x != y
+x &lt; y
+x &gt; y
+x &lt;= y
+x &gt;= y</code></pre>
+
+        <h3>Mantıksal</h3>
+        <pre><code>x and y
+x or y
+not x</code></pre>
+
+        <h3>String Birleştirme</h3>
+        <pre><code>string full = "Hello, " + name + "!"</code></pre>
+
+        <!-- KOŞULLAR -->
+        <h2 id="kosullar">Koşullar</h2>
+        <pre><code>if score >= 90 then
+    print("A")
+else if score >= 80 then
+    print("B")
+else
+    print("C")
+end if</code></pre>
+
+        <!-- DÖNGÜLER -->
+        <h2 id="donguler">Döngüler</h2>
+        <h3>Koşullu Döngü (while-style)</h3>
+        <pre><code>numeric i = 0
+loop i &lt; 10
+    print(i)
+    i = i + 1
+end loop</code></pre>
+
+        <h3>Sonsuz Döngü</h3>
+        <pre><code>loop
+    if done then exit
+    process()
+end loop</code></pre>
+
+        <h3>For Each</h3>
+        <pre><code>list numbers = [1; 2; 3; 4; 5]
+for each n in numbers
+    print(n)
+end for</code></pre>
+
+        <!-- FONKSİYONLAR -->
+        <h2 id="fonksiyonlar">Fonksiyonlar</h2>
+        <pre><code>-- Dönüş değeri olan
+numeric function add(a; b)
+    return a + b
+end function
+
+-- Dönüş değeri olmayan
+none function greet(string name)
+    print("Hello, " + name)
+end function
+
+-- Çağrım
+numeric result = add(3; 5)
+greet("World")</code></pre>
+
+        <h3>Lambda</h3>
+        <pre><code>numeric double = lambda(x)
+    return x * 2
+end lambda
+
+print(double(5))    -- 10</code></pre>
+
+        <!-- STRUCT -->
+        <h2 id="struct">Struct</h2>
+        <pre><code>struct Point
+    numeric x
+    numeric y
+end struct
+
+Point p = Point { x: 10; y: 20 }
+print(p.x)</code></pre>
+
+        <!-- LİSTELER -->
+        <h2 id="listeler">Listeler</h2>
+        <pre><code>list names = ["Ali"; "Can"; "Ece"]
+print(names[0])         -- Ali
+print(names.length)     -- 3
+
+-- Append
+names.append("Duru")</code></pre>
+
+        <!-- HATA YÖNETİMİ -->
+        <h2 id="hata-yonetimi">Hata Yönetimi</h2>
+        <pre><code>try
+    numeric result = riskyOperation()
+    print(result)
+catch error
+    print("Hata: " + error.message)
+finally
+    cleanup()
+end try</code></pre>
+
+        <h3>Result Tipi</h3>
+        <pre><code>-- Başarı veya hata döndüren fonksiyon
+Result function divide(numeric a; numeric b)
+    if b == 0 then
+        throw "Sıfıra bölme hatası"
+    end if
+    return a / b
+end function</code></pre>
+
+        <!-- EŞZAMANLILIK -->
+        <h2 id="esza">Eşzamanlılık — Spawn &amp; Channel</h2>
+        <pre><code>-- Spawn: paralel görev başlat
+spawn
+    print("Paralel çalışıyor")
+end spawn
+
+-- Async/Await
+async function fetchData()
+    string data = await loadFromDisk("data.txt")
+    print(data)
+end function</code></pre>
+
+        <!-- TÜRKÇE REFERANS -->
+        <h2 id="turkce-ref">Türkçe Anahtar Kelimeler (Özet)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>İngilizce</th><th>Türkçe</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code class="inline">function</code> / <code class="inline">end function</code></td><td><code class="inline">fonksiyon</code> / <code class="inline">fonksiyon sonu</code></td></tr>
+              <tr><td><code class="inline">if</code> / <code class="inline">then</code> / <code class="inline">else</code></td><td><code class="inline">koşul</code> / <code class="inline">ise</code> / <code class="inline">yoksa</code></td></tr>
+              <tr><td><code class="inline">end if</code></td><td><code class="inline">koşul sonu</code></td></tr>
+              <tr><td><code class="inline">loop</code> / <code class="inline">end loop</code></td><td><code class="inline">döngü</code> / <code class="inline">döngü sonu</code></td></tr>
+              <tr><td><code class="inline">return</code></td><td><code class="inline">döndür</code></td></tr>
+              <tr><td><code class="inline">print</code></td><td><code class="inline">yaz</code></td></tr>
+              <tr><td><code class="inline">main</code></td><td><code class="inline">giriş</code></td></tr>
+              <tr><td><code class="inline">numeric</code></td><td><code class="inline">sayısal</code></td></tr>
+              <tr><td><code class="inline">string</code></td><td><code class="inline">metin</code></td></tr>
+              <tr><td><code class="inline">boolean</code></td><td><code class="inline">mantıksal</code></td></tr>
+              <tr><td><code class="inline">true</code> / <code class="inline">false</code></td><td><code class="inline">doğru</code> / <code class="inline">yanlış</code></td></tr>
+              <tr><td><code class="inline">and</code> / <code class="inline">or</code> / <code class="inline">not</code></td><td><code class="inline">ve</code> / <code class="inline">veya</code> / <code class="inline">değil</code></td></tr>
+              <tr><td><code class="inline">struct</code> / <code class="inline">end struct</code></td><td><code class="inline">yapı</code> / <code class="inline">yapı sonu</code></td></tr>
+              <tr><td><code class="inline">spawn</code> / <code class="inline">end spawn</code></td><td><code class="inline">başlat</code> / <code class="inline">başlat sonu</code></td></tr>
+              <tr><td><code class="inline">try</code> / <code class="inline">catch</code> / <code class="inline">end try</code></td><td><code class="inline">dene</code> / <code class="inline">hata yakala</code> / <code class="inline">dene sonu</code></td></tr>
+              <tr><td><code class="inline">import</code> / <code class="inline">export</code></td><td><code class="inline">içe_aktar</code> / <code class="inline">dışa_aktar</code></td></tr>
+              <tr><td><code class="inline">const</code></td><td><code class="inline">sabit</code></td></tr>
+              <tr><td><code class="inline">exit</code></td><td><code class="inline">çık</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- YENİ DİL EKLEME -->
+        <h2 id="dil-ekleme">Yeni Dil Ekleme</h2>
+        <p>
+          MELP derleyicisi herhangi bir dil için minimal bir JSON yapısı ile genişletilebilir.
+        </p>
+        <pre><code>-- ORTAK/dil/&lt;dil_kodu&gt;/keywords.json
+{
+  "schema_version": "1.0.0",
+  "meta": {
+    "name": "Español",
+    "lang_id": "spanish",
+    "code": "es",
+    "enabled": true
+  },
+  "keywords": {
+    "function":     "función",
+    "end function": "fin función",
+    "print":        "imprimir",
+    "if":           "si",
+    "then":         "entonces",
+    "return":       "retornar"
+  }
+}</code></pre>
+        <p>
+          Bu dosya oluşturulduğunda MELP derleyicisi İspanyolca kaynak dosyaları
+          herhangi ek derleme adımı gerektirmeden işleyebilir. Algoritma değişmez.
+        </p>
+
+        <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);display:flex;gap:1rem;flex-wrap:wrap;">
+          <a href="ozellikler.html" class="btn btn-outline">← Özelliklere Geri Dön</a>
+          <a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn btn-primary">Web IDE'de Deneyin →</a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <p>© 2026 MELP. MIT Lisansı.</p>
+    <p style="margin-top:0.5rem;">
+      <a href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://melp.dev">melp.dev</a>
+    </p>
+  </footer>
+
+  <script>
+    // Mobile nav
+    const toggle = document.getElementById('navToggle');
+    const links  = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+    // Theme toggle
+    (function() {
+      const root  = document.documentElement;
+      const saved = localStorage.getItem('melp-theme') || 'dark';
+      root.setAttribute('data-theme', saved);
+      function sync(t) {
+        document.querySelectorAll('.theme-btn').forEach(b =>
+          b.classList.toggle('active', b.dataset.theme === t));
+      }
+      sync(saved);
+      document.querySelectorAll('.theme-btn').forEach(btn =>
+        btn.addEventListener('click', () => {
+          const t = btn.dataset.theme;
+          root.setAttribute('data-theme', t);
+          localStorage.setItem('melp-theme', t);
+          sync(t);
+        })
+      );
+    })();
+  </script>
+
+</body>
+</html>

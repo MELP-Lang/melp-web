@@ -1,0 +1,912 @@
+/* =====================================================
+   melp.dev — Ana Stil Dosyası
+   Renk Paleti: MELP IDE ile aynı (tutarlılık)
+   ===================================================== */
+
+:root {
+  --bg-primary:   #21252b;
+  --bg-secondary: #282c34;
+  --bg-code:      #1a1d23;
+  --accent:       #528bff;
+  --accent-alt:   #56b6c2;
+  --text-primary: #d7dae0;
+  --text-muted:   #636d83;
+  --success:      #98c379;
+  --warning:      #e5c07b;
+  --danger:       #e06c75;
+  --border:       #3a3f4b;
+}
+
+/* =====================================================
+   LIGHT THEME
+   ===================================================== */
+
+[data-theme="light"] {
+  --bg-primary:   #f7f7f5;
+  --bg-secondary: #ffffff;
+  --bg-code:      #eef0f3;
+  --accent:       #3d6fd4;
+  --accent-alt:   #1a8a96;
+  --text-primary: #1e2128;
+  --text-muted:   #5c6370;
+  --success:      #2d7a3a;
+  --warning:      #8a5a00;
+  --danger:       #c0392b;
+  --border:       #d0d4db;
+}
+
+[data-theme="light"] tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .eok-box {
+  background: #eef0f3;
+}
+
+[data-theme="light"] .info-box {
+  background: rgba(61,111,212,0.07);
+  border-color: rgba(61,111,212,0.25);
+}
+
+[data-theme="light"] .info-box.research {
+  background: rgba(138,90,0,0.07);
+  border-color: rgba(138,90,0,0.25);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.65;
+  font-size: 16px;
+}
+
+/* =====================================================
+   LINKS
+   ===================================================== */
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-alt);
+  text-decoration: underline;
+}
+
+/* =====================================================
+   HEADER / NAV
+   ===================================================== */
+
+header {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+nav {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-logo:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.nav-logo svg {
+  width: 32px;
+  height: 32px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.btn-nav {
+  background: var(--accent);
+  color: #fff !important;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.btn-nav:hover {
+  background: #6b9fff;
+  text-decoration: none;
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* =====================================================
+   THEME TOGGLE BUTTONS
+   ===================================================== */
+
+.theme-toggle {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin: 0 0.25rem;
+  flex-shrink: 0;
+}
+
+.theme-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-code);
+  cursor: pointer;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+  padding: 0;
+  line-height: 1;
+}
+
+.theme-btn:hover {
+  border-color: var(--accent);
+  background: var(--bg-secondary);
+}
+
+.theme-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 5rem;
+}
+
+footer a {
+  color: var(--text-muted);
+  margin: 0 0.5rem;
+}
+
+footer a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* =====================================================
+   GENEL LAYOUT
+   ===================================================== */
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+section {
+  padding: 4rem 0;
+}
+
+section + section {
+  border-top: 1px solid var(--border);
+}
+
+h1, h2, h3, h4 {
+  color: var(--text-primary);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+h1 { font-size: 3rem; }
+h2 { font-size: 2rem; margin-bottom: 1.5rem; }
+h3 { font-size: 1.4rem; margin-bottom: 0.8rem; }
+h4 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+
+p {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+p.muted {
+  color: var(--text-muted);
+}
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.6rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #6b9fff;
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.btn-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* =====================================================
+   HERO
+   ===================================================== */
+
+.hero {
+  padding: 6rem 0 5rem;
+  text-align: center;
+}
+
+.hero-logo {
+  margin-bottom: 1.5rem;
+}
+
+.hero-logo svg {
+  width: 72px;
+  height: 72px;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-alt) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.badge-row {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge-blue   { background: rgba(82,139,255,0.15); color: var(--accent); border: 1px solid rgba(82,139,255,0.3); }
+.badge-teal   { background: rgba(86,182,194,0.15); color: var(--accent-alt); border: 1px solid rgba(86,182,194,0.3); }
+.badge-green  { background: rgba(152,195,121,0.15); color: var(--success); border: 1px solid rgba(152,195,121,0.3); }
+.badge-yellow { background: rgba(229,192,123,0.15); color: var(--warning); border: 1px solid rgba(229,192,123,0.3); }
+
+/* =====================================================
+   KARŞILAŞTIRMA TABLOSU
+   ===================================================== */
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+th {
+  background: var(--bg-code);
+  color: var(--text-muted);
+  font-weight: 600;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+}
+
+th:first-child {
+  text-align: left;
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+td:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+tr:nth-child(even) td {
+  background: rgba(255,255,255,0.02);
+}
+
+tr.highlight-row td {
+  background: rgba(82,139,255,0.08);
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.check  { color: var(--success); font-size: 1.1rem; }
+.cross  { color: var(--danger);  font-size: 1.1rem; }
+
+/* =====================================================
+   ÖZELLIK KARTLARI
+   ===================================================== */
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+}
+
+.card h3 {
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* =====================================================
+   KOD BLOĞLARİ (yan yana)
+   ===================================================== */
+
+.code-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.code-panel {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.code-panel-header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.code-panel-header .lang-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+
+.code-panel pre {
+  padding: 1.2rem;
+  margin: 0;
+  overflow-x: auto;
+}
+
+.code-panel code {
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+pre code {
+  display: block;
+}
+
+/* Syntax renkleri — Prism yüklü değilse el ile */
+.kw  { color: #c678dd; }   /* anahtar kelime — mor */
+.fn  { color: #61afef; }   /* fonksiyon — mavi */
+.str { color: #98c379; }   /* string — yeşil */
+.cm  { color: #5c6370; }   /* yorum — gri */
+.num { color: #d19a66; }   /* sayı — turuncu */
+.typ { color: #e5c07b; }   /* tür — sarı */
+
+/* Tek satırlı kod bloğu */
+code.inline {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88em;
+  color: var(--accent-alt);
+}
+
+/* =====================================================
+   SECTION BAŞLIKLARI
+   ===================================================== */
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.section-header p {
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.section-label {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+/* =====================================================
+   CTA BÖLÜMÜ (alt)
+   ===================================================== */
+
+.cta-section {
+  text-align: center;
+  padding: 5rem 0;
+}
+
+.cta-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.cta-section p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+}
+
+/* =====================================================
+   TABS (kurulum.html)
+   ===================================================== */
+
+.tabs {
+  margin: 2rem 0;
+}
+
+.tab-nav {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  gap: 0;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+  white-space: nowrap;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.tab-pane {
+  display: none;
+  padding: 2rem 0;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* =====================================================
+   SALDIRI TABLOSU (ozellikler.html EOK)
+   ===================================================== */
+
+.attack-table td:last-child {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.eok-box {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+  overflow-x: auto;
+}
+
+.eok-box .label-red  { color: var(--danger); }
+.eok-box .label-blue { color: var(--accent); }
+.eok-box .label-green { color: var(--success); }
+
+.info-box {
+  background: rgba(82,139,255,0.08);
+  border: 1px solid rgba(82,139,255,0.25);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-box.research {
+  background: rgba(229,192,123,0.08);
+  border-color: rgba(229,192,123,0.25);
+}
+
+.info-box p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.info-box strong {
+  color: var(--text-primary);
+}
+
+/* =====================================================
+   FEATURE SECTION (ozellikler.html)
+   ===================================================== */
+
+.feature-section {
+  margin-bottom: 4rem;
+}
+
+.feature-section h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* =====================================================
+   DOCS (docs.html)
+   ===================================================== */
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 3rem;
+  align-items: start;
+  padding: 3rem 0;
+}
+
+.docs-sidebar {
+  position: sticky;
+  top: 80px;
+}
+
+.docs-sidebar h4 {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-bottom: 0.75rem;
+}
+
+.docs-sidebar ul {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.docs-sidebar ul li a {
+  display: block;
+  padding: 0.35rem 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  border-left: 2px solid transparent;
+  padding-left: 0.75rem;
+  margin-left: -0.75rem;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.docs-sidebar ul li a:hover {
+  color: var(--text-primary);
+  border-left-color: var(--accent);
+  text-decoration: none;
+}
+
+.docs-content h2 {
+  font-size: 1.6rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.docs-content h2:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+
+.docs-content h3 {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  color: var(--accent-alt);
+}
+
+.docs-content pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.docs-content pre code {
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.docs-content ul,
+.docs-content ol {
+  margin: 0.75rem 0 0.75rem 1.5rem;
+  color: var(--text-primary);
+}
+
+.docs-content li {
+  margin-bottom: 0.3rem;
+}
+
+/* =====================================================
+   KURULUM ADIM
+   ===================================================== */
+
+.install-step {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+  align-items: flex-start;
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
+  margin-top: 2px;
+}
+
+.install-step-content h3 {
+  margin-bottom: 0.5rem;
+}
+
+.install-step-content pre {
+  background: var(--bg-code);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+}
+
+.install-step-content pre code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
+  .hero { padding: 3.5rem 0 3rem; }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    flex-direction: column;
+    padding: 1rem 1.5rem;
+    gap: 0.8rem;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .code-compare {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-sidebar {
+    position: static;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .btn-group {
+    justify-content: center;
+  }
+
+  .cta-section h2 {
+    font-size: 1.8rem;
+  }
+}

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MELP kurulum rehberi — Web IDE, VS Code uzantısı veya CLI ile başlayın.">
+  <title>Kurulum — MELP</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+          <rect width="64" height="64" rx="10" fill="#21252b"/>
+          <text x="32" y="44" font-family="monospace" font-size="28" font-weight="bold"
+                text-anchor="middle" fill="#528bff">M</text>
+          <rect x="8" y="50" width="48" height="3" rx="1.5" fill="#528bff" opacity="0.4"/>
+        </svg>
+        MELP
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Ana Sayfa</a></li>
+        <li><a href="ozellikler.html">Özellikler</a></li>
+        <li><a href="kurulum.html" class="active">Kurulum</a></li>
+        <li><a href="docs.html">Dokümanlar</a></li>
+        <li><a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn-nav">Hemen Dene →</a></li>
+      </ul>
+      <div class="theme-toggle">
+        <button class="theme-btn" data-theme="dark" title="Koyu tema" aria-label="Koyu tema">🌙</button>
+        <button class="theme-btn" data-theme="light" title="Açık tema" aria-label="Açık tema">☀️</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section style="padding-top:3.5rem;padding-bottom:1rem;">
+      <span class="section-label">Başlarken</span>
+      <h1 style="font-size:2.4rem;margin-bottom:0.5rem;">Kurulum</h1>
+      <p class="muted">Üç farklı yol — ihtiyacınıza göre birini seçin.</p>
+    </section>
+
+    <!-- ========== TABS ========== -->
+    <section>
+      <div class="tabs">
+        <div class="tab-nav">
+          <button class="tab-btn active" data-tab="webide">🌐 Web IDE (Kurulmsuz)</button>
+          <button class="tab-btn" data-tab="vscode">🧩 VS Code Uzantısı</button>
+          <button class="tab-btn" data-tab="cli">💻 CLI (Yerel)</button>
+        </div>
+
+        <!-- TAB 1: WEB IDE -->
+        <div class="tab-pane active" id="tab-webide">
+          <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+            <h2 style="font-size:1.6rem;">Tarayıcıda Hemen Deneyin</h2>
+            <p>Hiçbir şey indirmeye gerek yok. Tarayıcıyı açın, yazmaya başlayın.</p>
+          </div>
+
+          <div style="text-align:center;padding:3rem 0;">
+            <p style="font-size:1.1rem;color:var(--text-muted);margin-bottom:2rem;">
+              Web IDE, tam özellikli MELP derleyicisini tarayıcınızda çalıştırır.<br>
+              Syntax highlighting, hata mesajları ve anlık derleme desteği bulunur.
+            </p>
+            <a href="https://melp-lang.github.io/melp-ide-web/"
+               target="_blank" rel="noopener"
+               class="btn btn-primary" style="font-size:1.15rem;padding:0.9rem 2.5rem;">
+              Web IDE'yi Aç →
+            </a>
+            <p style="margin-top:1.25rem;color:var(--text-muted);font-size:0.9rem;">
+              <code class="inline">melp-lang.github.io/melp-ide-web/</code>
+            </p>
+          </div>
+
+          <div class="cards-grid" style="margin-top:1rem;">
+            <div class="card">
+              <div class="card-icon">⚡</div>
+              <h3>Anlık Derleme</h3>
+              <p>Kod yazın, tarayıcıda çıktısını anında görün.</p>
+            </div>
+            <div class="card">
+              <div class="card-icon">🌍</div>
+              <h3>Çok Dilli Editör</h3>
+              <p>Türkçe, İngilizce ve diğer dillerle yazabilirsiniz.</p>
+            </div>
+            <div class="card">
+              <div class="card-icon">📱</div>
+              <h3>Kurulum Yok</h3>
+              <p>Herhangi bir cihazdan, herhangi bir işletim sisteminden erişin.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: VS CODE -->
+        <div class="tab-pane" id="tab-vscode">
+          <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+            <h2 style="font-size:1.6rem;">VS Code Uzantısı</h2>
+            <p>Syntax highlighting, hata altı çizgisi ve dil desteği VS Code içinde.</p>
+          </div>
+
+          <div class="install-step">
+            <div class="step-num">1</div>
+            <div class="install-step-content">
+              <h3>VSIX Dosyasını İndirin</h3>
+              <p>
+                GitHub Releases sayfasından en son <code class="inline">melp-ide-*.vsix</code>
+                dosyasını indirin.
+              </p>
+              <a href="https://github.com/MELP-Lang/MELP/releases"
+                 target="_blank" rel="noopener"
+                 class="btn btn-outline" style="margin-top:0.5rem;">
+                Releases Sayfası →
+              </a>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <div class="step-num">2</div>
+            <div class="install-step-content">
+              <h3>VS Code'dan Yükleyin</h3>
+              <p>Komut paletini açın ve "Install from VSIX" komutunu çalıştırın:</p>
+              <pre><code>Ctrl + Shift + P  →  "Install from VSIX"  →  indirilen .vsix dosyasını seçin</code></pre>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <div class="step-num">3</div>
+            <div class="install-step-content">
+              <h3>MELP Dosyasını Açın</h3>
+              <p>
+                Herhangi bir <code class="inline">.mlp</code> uzantılı dosya açtığınızda
+                uzantı otomatik devreye girer.
+              </p>
+              <pre><code>-- merhaba.mlp
+function main()
+    print("Merhaba Dünya!")
+end function</code></pre>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <p>
+              <strong>Not:</strong> VS Code uzantısı sözdizim renklendirme ve temel dil
+              desteği sağlar. Derleme için CLI kurulumu önerilir (üçüncü sekme).
+            </p>
+          </div>
+        </div>
+
+        <!-- TAB 3: CLI -->
+        <div class="tab-pane" id="tab-cli">
+          <div class="section-header" style="text-align:left;margin-bottom:2rem;">
+            <h2 style="font-size:1.6rem;">CLI — Yerel Kurulum</h2>
+            <p>
+              Derleyiciyi doğrudan makinenizde çalıştırın.
+              <span class="badge badge-yellow" style="font-size:0.78rem;">Linux x86_64 — Alfa</span>
+            </p>
+          </div>
+
+          <div class="install-step">
+            <div class="step-num">1</div>
+            <div class="install-step-content">
+              <h3>Depoyu Klonlayın</h3>
+              <pre><code>git clone https://github.com/MELP-Lang/MELP.git
+cd MELP/LLVM/STAGE1</code></pre>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <div class="step-num">2</div>
+            <div class="install-step-content">
+              <h3>Derleyiciyi Derleyin</h3>
+              <p>LLVM 14 ve C++17 destekleyen bir derleyici gereklidir:</p>
+              <pre><code><span class="cm"># Bağımlılıklar (Debian/Ubuntu)</span>
+sudo apt install llvm-14 clang-14 build-essential
+
+<span class="cm"># Derleme</span>
+make</code></pre>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <div class="step-num">3</div>
+            <div class="install-step-content">
+              <h3>İlk Programı Çalıştırın</h3>
+              <pre><code><span class="cm"># Örnek dosyayı çalıştır</span>
+bin/run_melp ornek.mlp
+
+<span class="cm"># Native binary üret</span>
+bin/melp_compiler ornek.mlp -o merhaba
+./merhaba</code></pre>
+            </div>
+          </div>
+
+          <div class="install-step">
+            <div class="step-num">4</div>
+            <div class="install-step-content">
+              <h3>Türkçe ile Yazın</h3>
+              <p>Bir <code class="inline">.mlp</code> dosyası oluşturun:</p>
+              <pre><code><span class="cm">-- merhaba.mlp</span>
+<span class="kw">fonksiyon</span> <span class="fn">giriş</span>()
+    <span class="fn">yaz</span>(<span class="str">"Merhaba Dünya!"</span>)
+<span class="kw">fonksiyon sonu</span></code></pre>
+              <pre><code>bin/run_melp merhaba.mlp
+<span class="cm"># Çıktı: Merhaba Dünya!</span></code></pre>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <p>
+              <strong>Sistem Gereksinimleri:</strong> Linux x86_64, LLVM 14, GCC/Clang C++17.
+              macOS ve Windows desteği planlı aşamadedir.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== ALT CTA ========== -->
+    <section class="cta-section" style="padding-top:3rem;">
+      <h2>Sorun mu var?</h2>
+      <p>GitHub Issues üzerinden bildirin veya tartışmalara katılın.</p>
+      <div class="btn-group" style="justify-content:center;">
+        <a href="https://github.com/MELP-Lang/MELP/issues" target="_blank" rel="noopener" class="btn btn-outline">GitHub Issues →</a>
+        <a href="docs.html" class="btn btn-outline">Dokümantasyon</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <p>© 2026 MELP. MIT Lisansı.</p>
+    <p style="margin-top:0.5rem;">
+      <a href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://melp.dev">melp.dev</a>
+    </p>
+  </footer>
+
+  <script>
+    // Tab sistemi
+    const tabBtns  = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+        tabBtns.forEach(b  => b.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + target).classList.add('active');
+      });
+    });
+
+    // Mobile nav
+    const toggle = document.getElementById('navToggle');
+    const links  = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+    // Theme toggle
+    (function() {
+      const root  = document.documentElement;
+      const saved = localStorage.getItem('melp-theme') || 'dark';
+      root.setAttribute('data-theme', saved);
+      function sync(t) {
+        document.querySelectorAll('.theme-btn').forEach(b =>
+          b.classList.toggle('active', b.dataset.theme === t));
+      }
+      sync(saved);
+      document.querySelectorAll('.theme-btn').forEach(btn =>
+        btn.addEventListener('click', () => {
+          const t = btn.dataset.theme;
+          root.setAttribute('data-theme', t);
+          localStorage.setItem('melp-theme', t);
+          sync(t);
+        })
+      );
+    })();
+  </script>
+
+</body>
+</html>
