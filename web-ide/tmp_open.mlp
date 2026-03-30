@@ -1,0 +1,70 @@
+# KDE Config Temizleyici 📜
+ 
+## 📌 Tanım
+Bu betik, KDE Plasma masaüstü ortamında bozulan yapılandırma dosyalarını:
+- **Yedekleyerek**  
+- **Güvenle temizleyerek**  
+- **Geri yükleyebilmenizi** sağlar.
+
+## 🛠️ Teknik Özellikler
+- **Desteklenen Dağıtımlar**: Pardus, Kubuntu, Manjaro KDE, openSUSE
+- **Test Edilen Sürüm**: Plasma 5.24+
+- **Gereksinimler**: `bash`, `coreutils`
+
+## 📦 Kurulum
+```bash
+wget -O ~/.local/bin/kde_cleaner https://raw.githubusercontent.com/EXAMPLE/kde_cleaner/main/kde_cleaner.sh
+chmod +x ~/.local/bin/kde_cleaner
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## 🖥️ Kullanım
+```bash
+kde_cleaner  # Menü modunda çalıştırır
+```
+
+### Komut Seçenekleri
+| Seçenek | Açıklama |
+|---------|----------|
+| **1**   | Dosya Sil + Yedekle |
+| **2**   | Yedekten Geri Yükle |
+| **3**   | Yedekleri Listele |
+| **4**   | Sistem Bilgisi |
+
+## 🔍 Temizlenen Dosyalar
+```text
+~/.config/
+├── plasma*
+├── kwin*
+├── kdeglobals
+├── monitors.xml
+└── dconf/
+```
+
+## ⚠️ Uyarılar
+1. **Kritik yapılandırmalarınızın** tam yedeğini alın:
+   ```bash
+   timeshift --create --comments "KDE Cleaner öncesi"
+   ```
+2. Root yetkisi **gerektirmez**  
+3. Yedekler `~/.kde_backups` altında saklanır
+
+## ❓ Sık Sorulan Sorular
+### ❔ Betik çalıştıktan sonra masaüstüm boşaldı?
+```bash
+kde_cleaner 2  # Yedekten geri yükle
+```
+### ❔ Yedekler ne kadar yer kaplıyor?
+```bash
+du -sh ~/.kde_backups
+```
+
+## 🌟 Katkı
+Hata bildirimi veya özellik isteği için:
+1. [GitHub Issues](https://github.com/EXAMPLE/issues)  
+2. `kde_cleaner --bug-report`
+
+## 📜 Lisans
+MIT Lisansı © 2023 [Adınız]
+

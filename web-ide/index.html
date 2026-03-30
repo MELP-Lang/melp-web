@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MELP programlama dili için tarayıcı tabanlı IDE. Kurulum gerektirmez — doğrudan kodlamaya başlayın.">
+  <title>MELP IDE — Online Editör</title>
+  <script src="editor.bundle.js" defer></script>
+
+  <!-- ── WASM modu: tarayıcı içi derleme ──────────────────────────────── -->
+  <script src="wasm/melp_compiler.js" onerror="console.warn('WASM yüklenemedi')"></script>
+
+  <style>
+    :root {
+      --bg:             #1e1e1e;
+      --fg:             #abb2bf;
+      --titlebar-bg:    #21252b;
+      --sidebar-bg:     #21252b;
+      --sidebar-fg:     #abb2bf;
+      --sidebar-hdr-fg: #9da5b4;
+      --tabs-bg:        #282c34;
+      --tab-fg:         #636d83;
+      --tab-active-bg:  #1e1e1e;
+      --tab-active-fg:  #d7dae0;
+      --statusbar-bg:   #007acc;
+      --statusbar-fg:   #fff;
+      --hover-bg:       #2c313c;
+      --border:         #181a1f;
+      --accent:         #528bff;
+      --modified:       #e5c07b;
+      --output-bg:      #151718;
+      --btn-bg:         rgba(255,255,255,0.06);
+      --btn-border:     rgba(255,255,255,0.12);
+      --btn-hover:      rgba(255,255,255,0.12);
+    }
+    body.light {
+      --bg:             #ffffff;
+      --fg:             #383a42;
+      --titlebar-bg:    #eaebeb;
+      --sidebar-bg:     #f0f0f0;
+      --sidebar-fg:     #383a42;
+      --sidebar-hdr-fg: #696c77;
+      --tabs-bg:        #e5e5e5;
+      --tab-fg:         #696c77;
+      --tab-active-bg:  #ffffff;
+      --tab-active-fg:  #383a42;
+      --statusbar-bg:   #007acc;
+      --statusbar-fg:   #fff;
+      --output-bg:      #f8f8f8;
+      --hover-bg:       #e8e8e8;
+      --border:         #ddd;
+      --btn-bg:         rgba(0,0,0,0.06);
+      --btn-border:     rgba(0,0,0,0.15);
+      --btn-hover:      rgba(0,0,0,0.1);
+    }
+    body.dracula {
+      --bg:             #282a36;
+      --fg:             #f8f8f2;
+      --titlebar-bg:    #21222c;
+      --sidebar-bg:     #21222c;
+      --sidebar-fg:     #f8f8f2;
+      --sidebar-hdr-fg: #6272a4;
+      --tabs-bg:        #21222c;
+      --tab-fg:         #6272a4;
+      --tab-active-bg:  #282a36;
+      --tab-active-fg:  #f8f8f2;
+      --statusbar-bg:   #6272a4;
+      --statusbar-fg:   #f8f8f2;
+      --hover-bg:       #44475a;
+      --border:         #191a21;
+      --accent:         #bd93f9;
+      --modified:       #ffb86c;
+      --output-bg:      #191a21;
+      --btn-bg:         rgba(255,255,255,0.06);
+      --btn-border:     rgba(255,255,255,0.12);
+      --btn-hover:      rgba(255,255,255,0.12);
+    }
+    body.monokai {
+      --bg:             #272822;
+      --fg:             #f8f8f2;
+      --titlebar-bg:    #1e1f1c;
+      --sidebar-bg:     #1e1f1c;
+      --sidebar-fg:     #f8f8f2;
+      --sidebar-hdr-fg: #75715e;
+      --tabs-bg:        #1e1f1c;
+      --tab-fg:         #75715e;
+      --tab-active-bg:  #272822;
+      --tab-active-fg:  #f8f8f2;
+      --statusbar-bg:   #75715e;
+      --statusbar-fg:   #f8f8f2;
+      --hover-bg:       #3e3d32;
+      --border:         #1a1b17;
+      --accent:         #f92672;
+      --modified:       #e6db74;
+      --output-bg:      #1a1b17;
+      --btn-bg:         rgba(255,255,255,0.06);
+      --btn-border:     rgba(255,255,255,0.12);
+      --btn-hover:      rgba(255,255,255,0.12);
+    }
+    body.nord {
+      --bg:             #2e3440;
+      --fg:             #d8dee9;
+      --titlebar-bg:    #242933;
+      --sidebar-bg:     #242933;
+      --sidebar-fg:     #d8dee9;
+      --sidebar-hdr-fg: #4c566a;
+      --tabs-bg:        #242933;
+      --tab-fg:         #4c566a;
+      --tab-active-bg:  #2e3440;
+      --tab-active-fg:  #eceff4;
+      --statusbar-bg:   #5e81ac;
+      --statusbar-fg:   #eceff4;
+      --hover-bg:       #3b4252;
+      --border:         #1c2028;
+      --accent:         #88c0d0;
+      --modified:       #ebcb8b;
+      --output-bg:      #1c2028;
+      --btn-bg:         rgba(255,255,255,0.06);
+      --btn-border:     rgba(255,255,255,0.12);
+      --btn-hover:      rgba(255,255,255,0.12);
+    }
+    body.solarized {
+      --bg:             #002b36;
+      --fg:             #839496;
+      --titlebar-bg:    #073642;
+      --sidebar-bg:     #073642;
+      --sidebar-fg:     #93a1a1;
+      --sidebar-hdr-fg: #657b83;
+      --tabs-bg:        #073642;
+      --tab-fg:         #657b83;
+      --tab-active-bg:  #002b36;
+      --tab-active-fg:  #93a1a1;
+      --statusbar-bg:   #268bd2;
+      --statusbar-fg:   #fdf6e3;
+      --hover-bg:       #0d4a5a;
+      --border:         #00212b;
+      --accent:         #268bd2;
+      --modified:       #b58900;
+      --output-bg:      #001e26;
+      --btn-bg:         rgba(255,255,255,0.06);
+      --btn-border:     rgba(255,255,255,0.14);
+      --btn-hover:      rgba(255,255,255,0.1);
+    }
+    body.pink {
+      --bg:             #fff0f5;
+      --fg:             #4a2040;
+      --titlebar-bg:    #fce4ec;
+      --sidebar-bg:     #fce4ec;
+      --sidebar-fg:     #4a2040;
+      --sidebar-hdr-fg: #ad1464;
+      --tabs-bg:        #fce4ec;
+      --tab-fg:         #ad1464;
+      --tab-active-bg:  #fff0f5;
+      --tab-active-fg:  #4a2040;
+      --statusbar-bg:   #e91e8c;
+      --statusbar-fg:   #fff;
+      --hover-bg:       #f8bbd0;
+      --border:         #f48fb1;
+      --accent:         #c2185b;
+      --modified:       #ff6f00;
+      --output-bg:      #fbe9f1;
+      --btn-bg:         rgba(195,24,91,0.08);
+      --btn-border:     rgba(195,24,91,0.2);
+      --btn-hover:      rgba(195,24,91,0.15);
+    }
+    body.blue-kids {
+      --bg:             #e8f4fd;
+      --fg:             #1a3a5c;
+      --titlebar-bg:    #bbdefb;
+      --sidebar-bg:     #bbdefb;
+      --sidebar-fg:     #1a3a5c;
+      --sidebar-hdr-fg: #1565c0;
+      --tabs-bg:        #bbdefb;
+      --tab-fg:         #1565c0;
+      --tab-active-bg:  #e8f4fd;
+      --tab-active-fg:  #1a3a5c;
+      --statusbar-bg:   #1565c0;
+      --statusbar-fg:   #fff;
+      --hover-bg:       #90caf9;
+      --border:         #64b5f6;
+      --accent:         #0277bd;
+      --modified:       #f57c00;
+      --output-bg:      #dceefa;
+      --btn-bg:         rgba(2,119,189,0.08);
+      --btn-border:     rgba(2,119,189,0.2);
+      --btn-hover:      rgba(2,119,189,0.15);
+    }
+    body.purple {
+      --bg:             #1a0a2e;
+      --fg:             #e1d5f7;
+      --titlebar-bg:    #2d1b4e;
+      --sidebar-bg:     #2d1b4e;
+      --sidebar-fg:     #e1d5f7;
+      --sidebar-hdr-fg: #ce93d8;
+      --tabs-bg:        #2d1b4e;
+      --tab-fg:         #ce93d8;
+      --tab-active-bg:  #1a0a2e;
+      --tab-active-fg:  #e1d5f7;
+      --statusbar-bg:   #7b1fa2;
+      --statusbar-fg:   #fff;
+      --hover-bg:       #3d2060;
+      --border:         #7b2fbe;
+      --accent:         #9c27b0;
+      --modified:       #ffab40;
+      --output-bg:      #220d38;
+      --btn-bg:         rgba(156,39,176,0.1);
+      --btn-border:     rgba(156,39,176,0.25);
+      --btn-hover:      rgba(156,39,176,0.18);
+    }
+    body.magenta {
+      --bg:             #1a0014;
+      --fg:             #f5d0ff;
+      --titlebar-bg:    #2e0028;
+      --sidebar-bg:     #2e0028;
+      --sidebar-fg:     #f5d0ff;
+      --sidebar-hdr-fg: #ea80fc;
+      --tabs-bg:        #2e0028;
+      --tab-fg:         #ea80fc;
+      --tab-active-bg:  #1a0014;
+      --tab-active-fg:  #f5d0ff;
+      --statusbar-bg:   #aa00ff;
+      --statusbar-fg:   #fff;
+      --hover-bg:       #3d0040;
+      --border:         #bf00ff;
+      --accent:         #e040fb;
+      --modified:       #ffcc02;
+      --output-bg:      #200018;
+      --btn-bg:         rgba(224,64,251,0.1);
+      --btn-border:     rgba(224,64,251,0.25);
+      --btn-hover:      rgba(224,64,251,0.18);
+    }
+    body.fuchsia {
+      --bg:             #0f001a;
+      --fg:             #ffd6ec;
+      --titlebar-bg:    #220030;
+      --sidebar-bg:     #220030;
+      --sidebar-fg:     #ffd6ec;
+      --sidebar-hdr-fg: #ff80ab;
+      --tabs-bg:        #220030;
+      --tab-fg:         #ff80ab;
+      --tab-active-bg:  #0f001a;
+      --tab-active-fg:  #ffd6ec;
+      --statusbar-bg:   #c51162;
+      --statusbar-fg:   #fff;
+      --hover-bg:       #2e0040;
+      --border:         #f50057;
+      --accent:         #f50057;
+      --modified:       #ffab40;
+      --output-bg:      #140020;
+      --btn-bg:         rgba(245,0,87,0.1);
+      --btn-border:     rgba(245,0,87,0.25);
+      --btn-hover:      rgba(245,0,87,0.18);
+    }
+    body.cyan {
+      --bg:             #001a1a;
+      --fg:             #b2f0f0;
+      --titlebar-bg:    #002b2b;
+      --sidebar-bg:     #002b2b;
+      --sidebar-fg:     #b2f0f0;
+      --sidebar-hdr-fg: #4dd0e1;
+      --tabs-bg:        #002b2b;
+      --tab-fg:         #4dd0e1;
+      --tab-active-bg:  #001a1a;
+      --tab-active-fg:  #b2f0f0;
+      --statusbar-bg:   #00838f;
+      --statusbar-fg:   #fff;
+      --hover-bg:       #003838;
+      --border:         #00bcd4;
+      --accent:         #00bcd4;
+      --modified:       #ffd740;
+      --output-bg:      #002020;
+      --btn-bg:         rgba(0,188,212,0.1);
+      --btn-border:     rgba(0,188,212,0.25);
+      --btn-hover:      rgba(0,188,212,0.18);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      display: flex; flex-direction: column; height: 100vh;
+      background: var(--bg); color: var(--fg);
+      font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px;
+      overflow: hidden;
+    }
+
+    /* ── Titlebar ───────────────────────────────────────────────────────── */
+    #titlebar {
+      height: 36px; background: var(--titlebar-bg);
+      display: flex; align-items: center; padding: 0 10px; gap: 4px;
+      user-select: none; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    #titlebar .tb-logo { font-weight: bold; font-size: 13px; color: #528bff; margin-right: 8px; text-decoration: none; }
+    .tb-btn {
+      background: var(--btn-bg); border: 1px solid var(--btn-border);
+      color: var(--fg); padding: 3px 10px; border-radius: 4px;
+      cursor: pointer; font-size: 11px; font-family: monospace;
+    }
+    .tb-btn:hover { background: var(--btn-hover); }
+    .tb-btn.primary { background: #007acc; color: #fff; border-color: #007acc; }
+    .tb-btn.primary:hover { background: #0069ab; }
+    .tb-btn.run     { background: #3d8b40; color: #fff; border-color: #3d8b40; }
+    .tb-btn.run:hover { background: #2e7d32; }
+    .tb-sep { flex: 1; }
+    /* ── Dil/Sözdizimi seçicileri ──────────────────────────────────────── */
+    .tb-select-group { display: flex; align-items: center; gap: 3px; }
+    .tb-select-label { font-size: 10px; color: var(--sidebar-hdr-fg); white-space: nowrap; }
+    .tb-select {
+      background: var(--btn-bg); border: 1px solid var(--btn-border);
+      color: var(--fg); padding: 2px 6px; border-radius: 4px;
+      font-size: 11px; font-family: monospace; cursor: pointer;
+      max-width: 120px;
+    }
+    .tb-select:focus { outline: 1px solid var(--accent); }
+    .tb-select option { background: #21252b; color: #abb2bf; }
+
+    /* ── Ana içerik ─────────────────────────────────────────────────────── */
+    #workspace { display: flex; flex: 1; overflow: hidden; }
+
+    /* ── Sidebar (Örnekler) ─────────────────────────────────────────────── */
+    #sidebar {
+      width: 200px; min-width: 120px; max-width: 320px;
+      background: var(--sidebar-bg); border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;
+    }
+    #sidebar-header {
+      height: 35px; box-sizing: border-box;
+      display: flex; align-items: center; padding: 0 12px;
+      font-size: 10px; text-transform: uppercase;
+      letter-spacing: 1.2px; color: var(--sidebar-hdr-fg);
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    #examples-list { flex: 1; overflow-y: auto; padding: 4px 0; }
+    #examples-lang-header {
+      padding: 6px 14px 5px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.5px;
+      color: var(--sidebar-hdr-fg); opacity: 0.75;
+      border-bottom: 1px solid var(--border);
+    }
+    .tree-file {
+      padding: 5px 14px; cursor: pointer; color: var(--sidebar-fg);
+      font-size: 12px; display: flex; align-items: center;
+      justify-content: space-between; gap: 4px;
+    }
+    .tree-file > span:first-child {
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;
+    }
+    .tree-file:hover { background: var(--hover-bg); }
+    .example-badge {
+      font-size: 9px; font-family: monospace; opacity: 0.5;
+      flex-shrink: 0; letter-spacing: 0.3px; white-space: nowrap;
+    }
+
+    /* ── Modal ──────────────────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+      display: flex; align-items: center; justify-content: center; z-index: 1000;
+    }
+    .modal-overlay.hidden { display: none; }
+    .modal-box {
+      background: var(--bg); color: var(--fg); border: 1px solid var(--border);
+      border-radius: 8px; width: min(520px, 92vw); max-height: 80vh;
+      display: flex; flex-direction: column; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid var(--border);
+      font-size: 13px; font-weight: 600;
+    }
+    .modal-close {
+      background: transparent; border: none; color: var(--fg); cursor: pointer;
+      font-size: 18px; line-height: 1; opacity: 0.6; padding: 0 4px;
+    }
+    .modal-close:hover { opacity: 1; }
+    .modal-body { padding: 14px 16px; overflow-y: auto; flex: 1; }
+    .modal-hint { font-size: 11px; opacity: 0.7; margin: 0 0 10px; line-height: 1.5; }
+    .modal-hint code { background: var(--btn-bg); padding: 1px 4px; border-radius: 3px; font-size: 11px; }
+    .modal-textarea {
+      width: 100%; box-sizing: border-box; height: 300px; resize: vertical;
+      background: var(--btn-bg); color: var(--fg); border: 1px solid var(--border);
+      border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      padding: 8px; outline: none; line-height: 1.6;
+    }
+    .modal-textarea:focus { border-color: var(--accent); }
+    .modal-footer {
+      padding: 10px 16px; border-top: 1px solid var(--border);
+      display: flex; gap: 8px; justify-content: flex-end;
+    }
+
+    /* ── Editör alanı ───────────────────────────────────────────────────── */
+    #main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* ── Sekmeler ───────────────────────────────────────────────────────── */
+    #tabs {
+      height: 35px; background: var(--tabs-bg);
+      display: flex; align-items: stretch; overflow-x: auto; flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      padding: 0 14px; font-size: 12px; cursor: pointer;
+      border-right: 1px solid var(--border); white-space: nowrap;
+      color: var(--tab-fg); display: flex; align-items: center; gap: 5px;
+    }
+    .tab.active {
+      background: var(--tab-active-bg); color: var(--tab-active-fg);
+      border-top: 2px solid var(--accent);
+    }
+    .tab.modified .tab-label::after { content: ' ●'; color: var(--modified); }
+    .tab-close { opacity: 0.5; font-size: 14px; line-height: 1; }
+    .tab-close:hover { opacity: 1; }
+
+    /* ── CodeMirror ─────────────────────────────────────────────────────── */
+    #editor-container { flex: 1; min-height: 0; overflow: hidden; position: relative; }
+    #editor-container .cm-editor  { height: 100%; }
+    #editor-container .cm-scroller { overflow: auto; min-height: 0; }
+
+    /* ── Çıktı paneli ───────────────────────────────────────────────────── */
+    #output-panel {
+      height: 220px; background: var(--output-bg); border-top: 2px solid var(--accent);
+      display: flex; flex-direction: column; flex-shrink: 0;
+    }
+    #output-panel.hidden { display: none; }
+    #output-toolbar {
+      height: 28px; background: var(--titlebar-bg);
+      display: flex; align-items: center; padding: 0 10px; gap: 8px; flex-shrink: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    #output-toolbar span { font-size: 11px; color: var(--sidebar-hdr-fg); text-transform: uppercase; letter-spacing: 0.8px; }
+    #output-content {
+      flex: 1; overflow-y: auto; padding: 8px 12px;
+      font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 12px;
+      white-space: pre-wrap; color: var(--fg); line-height: 1.5;
+    }
+
+    /* ── Status bar ─────────────────────────────────────────────────────── */
+    #statusbar {
+      height: 24px; background: var(--statusbar-bg); flex-shrink: 0;
+      display: flex; align-items: center; padding: 0 12px; gap: 14px;
+      font-size: 11px; color: var(--statusbar-fg);
+    }
+    #statusbar .sb-sep { flex: 1; }
+    #statusbar #validation-status { font-size: 11px; white-space: nowrap; }
+    #statusbar .val-ok    { opacity: 0.75; }
+    #statusbar .val-error { color: #ffaaaa; font-weight: 600; }
+    #statusbar .val-warn  { color: #ffe599; }
+    #statusbar .val-fix   { text-decoration: underline; cursor: pointer !important; }
+    /* ── Görünüm popup ──────────────────────────────────────────────────── */
+    #appearance-picker { position: relative; }
+    #appearance-popup {
+      display: none; position: absolute; top: 32px; left: 0;
+      background: var(--sidebar-bg); border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px; min-width: 180px;
+      z-index: 100; box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    #appearance-popup.open { display: block; }
+    .ap-section-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+      color: var(--sidebar-hdr-fg); padding: 4px 8px 2px; user-select: none;
+    }
+    .ap-divider { border: none; border-top: 1px solid var(--border); margin: 6px 0; }
+    .palette-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 5px 8px; border-radius: 4px; cursor: pointer;
+      color: var(--fg); font-size: 12px;
+    }
+    .palette-item:hover { background: var(--hover-bg); }
+    .palette-item.active { background: var(--hover-bg); font-weight: 600; }
+    .palette-swatch {
+      width: 14px; height: 14px; border-radius: 3px;
+      border: 2px solid; flex-shrink: 0;
+    }
+    .font-size-row {
+      display: flex; gap: 4px; padding: 4px 8px;
+    }
+    .font-size-row .tb-btn {
+      flex: 1; text-align: center; padding: 4px 0;
+    }
+    .font-size-row .tb-btn.active {
+      border-color: var(--accent); color: var(--accent); font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── TITLEBAR ────────────────────────────────────────────────────────── -->
+  <div id="titlebar">
+    <a class="tb-logo" href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener noreferrer">◈ MELP</a>
+    <button class="tb-btn" id="btn-new"     title="Yeni (Ctrl+N)">+ Yeni</button>
+    <button class="tb-btn" id="btn-open"    title="Dosya Aç (Ctrl+O)">📄 Aç</button>
+    <button class="tb-btn" id="btn-save"    title="İndir (Ctrl+S)">💾 Kaydet</button>
+    <div id="appearance-picker">
+      <button id="appearance-btn" class="tb-btn">🎨 Görünüm</button>
+      <div id="appearance-popup">
+        <div class="ap-section-label">Tema</div>
+        <div class="palette-item" data-theme=""><span class="palette-swatch" style="background:#1e1e1e;border-color:#528bff"></span>Dark</div>
+        <div class="palette-item" data-theme="light"><span class="palette-swatch" style="background:#ffffff;border-color:#007acc"></span>Light</div>
+        <div class="palette-item" data-theme="dracula"><span class="palette-swatch" style="background:#282a36;border-color:#bd93f9"></span>Dracula</div>
+        <div class="palette-item" data-theme="monokai"><span class="palette-swatch" style="background:#272822;border-color:#f92672"></span>Monokai</div>
+        <div class="palette-item" data-theme="nord"><span class="palette-swatch" style="background:#2e3440;border-color:#88c0d0"></span>Nord</div>
+        <div class="palette-item" data-theme="solarized"><span class="palette-swatch" style="background:#002b36;border-color:#268bd2"></span>Solarized</div>
+        <div class="palette-item" data-theme="pink"><span class="palette-swatch" style="background:#fff0f5;border-color:#c2185b"></span>Pink</div>
+        <div class="palette-item" data-theme="blue-kids"><span class="palette-swatch" style="background:#e8f4fd;border-color:#0277bd"></span>Blue</div>
+        <div class="palette-item" data-theme="purple"><span class="palette-swatch" style="background:#1a0a2e;border-color:#9c27b0"></span>Purple</div>
+        <div class="palette-item" data-theme="magenta"><span class="palette-swatch" style="background:#1a0014;border-color:#e040fb"></span>Magenta</div>
+        <div class="palette-item" data-theme="fuchsia"><span class="palette-swatch" style="background:#0f001a;border-color:#f50057"></span>Fuchsia</div>
+        <div class="palette-item" data-theme="cyan"><span class="palette-swatch" style="background:#001a1a;border-color:#00bcd4"></span>Cyan</div>
+        <hr class="ap-divider">
+        <div class="ap-section-label">Yazı Boyutu</div>
+        <div class="font-size-row">
+          <button class="tb-btn font-size-btn" data-size="S"  title="Küçük (12px)">S</button>
+          <button class="tb-btn font-size-btn" data-size="M"  title="Orta (14px)">M</button>
+          <button class="tb-btn font-size-btn" data-size="L"  title="Büyük (17px)">L</button>
+          <button class="tb-btn font-size-btn" data-size="XL" title="Çok Büyük (21px)">XL</button>
+        </div>
+      </div>
+    </div>
+    <div class="tb-sep"></div>
+    <div class="tb-select-group" title="Yazım dili">
+      <span class="tb-select-label">Dil</span>
+      <select id="sel-lang" class="tb-select"></select>
+    </div>
+    <div class="tb-select-group" title="Sözdizimi stili">
+      <span class="tb-select-label">Sözdizimi</span>
+      <select id="sel-syntax" class="tb-select"></select>
+    </div>
+    <button class="tb-btn" id="btn-lang-edit" title="Bu dilin keyword eşleşmelerini özelleştir">✏ Dil Düzenle</button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn primary" id="btn-compile" title="Derle (Ctrl+B)">⚙ Derle</button>
+    <button class="tb-btn run"     id="btn-run"     title="Çalıştır (F5)">▶ Çalıştır</button>
+  </div>
+
+  <!-- ── ANA ALAN ────────────────────────────────────────────────────────── -->
+  <div id="workspace">
+
+    <!-- Örnekler -->
+    <div id="sidebar">
+      <div id="sidebar-header">Örnekler</div>
+      <div id="examples-list"></div>
+    </div>
+
+    <!-- Editör + Çıktı -->
+    <div id="main">
+      <div id="tabs"></div>
+      <div id="editor-container"></div>
+
+      <!-- Çıktı paneli (başlangıçta gizli) -->
+      <div id="output-panel" class="hidden">
+        <div id="output-toolbar">
+          <span>Çıktı</span>
+          <div style="flex:1"></div>
+          <button id="btn-close-output" style="background:transparent;border:none;color:var(--sidebar-hdr-fg);cursor:pointer;font-size:14px;">×</button>
+        </div>
+        <pre id="output-content"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STATUS BAR ──────────────────────────────────────────────────────── -->
+  <div id="statusbar">
+    <span id="status-text">Hazır</span>
+    <span class="sb-sep"></span>
+    <span id="validation-status"></span>
+    <span id="cursor-info">Sat 1, Sut 1</span>
+    <span>MELP</span>
+    <span>UTF-8</span>
+  </div>
+
+  <script src="app-web.js" defer></script>
+
+  <!-- ── Dil düzenle modali ───────────────────────────────────────── -->
+  <div id="lang-modal-overlay" class="modal-overlay hidden">
+    <div id="lang-modal" class="modal-box">
+      <div class="modal-header">
+        <span id="lang-modal-title">Dili Özelleştir</span>
+        <button id="btn-lang-modal-close" class="modal-close">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-hint">
+          Her satıra bir eşleşme: <code>canonical = senin_kelimen</code><br>
+          Örnek: <code>print = yaz</code>&nbsp;&nbsp;<code>main = ana</code>&nbsp;&nbsp;<code>numeric = sayı</code><br>
+          Boş veya tanınmayan bir canonical (örn. <code>prin = yaz</code> ya da <code>print =</code>) kaydedilmez — varsayılan korunur.
+        </p>
+        <textarea id="custom-map-textarea" class="modal-textarea"
+          placeholder="print = yaz&#10;main = ana&#10;if = eğer"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-lang-modal-save" class="tb-btn primary">💾 Kaydet</button>
+        <button id="btn-lang-modal-cancel" class="tb-btn">İptal</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
