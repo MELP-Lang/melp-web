@@ -216,6 +216,128 @@
     </section>
 
     <!-- ========== ALT CTA ========== -->
+    <!-- ===== BENCHMARK ===== -->
+    <section id="benchmark" style="padding:4rem 0;">
+      <div style="max-width:900px;margin:0 auto;padding:0 1.5rem;">
+        <h2 style="text-align:center;margin-bottom:0.5rem;">Performans Karşılaştırması</h2>
+        <p style="text-align:center;color:var(--text-muted);margin-bottom:0.25rem;font-size:0.95rem;">
+          5 farklı algoritma · MELP Stage0 derleyicisi · x86-64, 3 tur minimum · 30 Mart 2026
+        </p>
+        <p style="text-align:center;color:var(--text-muted);font-size:0.82rem;margin-bottom:2.5rem;max-width:640px;margin-left:auto;margin-right:auto;">
+          Sonuçlar <code>BENCHMARK_SUITES/comprehensive_bench.sh</code> betiği çalıştırılarak doğrudan ölçülmüştür.
+          MELP native: <code>melp_compiler -O3 → llc -O3 → gcc link</code> pipeline.
+        </p>
+
+        <!-- Multi-benchmark runtime table -->
+        <h3 style="margin-bottom:1rem;font-size:1.05rem;letter-spacing:0.02em;">⏱ Runtime Karşılaştırması (ms, minimum 3 tur)</h3>
+        <div style="overflow-x:auto;margin-bottom:0.5rem;">
+          <table style="width:100%;border-collapse:collapse;font-size:0.9rem;">
+            <thead>
+              <tr style="border-bottom:2px solid var(--border);">
+                <th style="text-align:left;padding:0.5rem 0.75rem;min-width:180px;">Benchmark</th>
+                <th style="text-align:right;padding:0.5rem 0.75rem;">GCC -O0</th>
+                <th style="text-align:right;padding:0.5rem 0.75rem;">GCC -O2</th>
+                <th style="text-align:right;padding:0.5rem 0.75rem;color:#6366f1;font-weight:700;">🟣 MELP native -O3</th>
+                <th style="padding:0.5rem 0.75rem;min-width:140px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- B1 Fibonacci(40): max=662ms → %: GCC-O0=100, GCC-O2=28, MELP=44 -->
+              <tr>
+                <td style="padding:0.45rem 0.75rem;"><strong>B1</strong> Fibonacci(40) <span style="font-size:0.78rem;color:var(--text-muted);">özyinelemeli</span></td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">662 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">184 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;color:#6366f1;font-weight:600;">292 ms</td>
+                <td style="padding:0.45rem 0.75rem;">
+                  <div style="display:flex;gap:2px;align-items:center;height:8px;">
+                    <div style="background:#94a3b8;height:8px;border-radius:2px;width:100%;max-width:60px" title="GCC-O0 662ms"></div>
+                    <div style="background:#22c55e;height:8px;border-radius:2px;width:28%;max-width:17px" title="GCC-O2 184ms"></div>
+                    <div style="background:#6366f1;height:8px;border-radius:2px;width:44%;max-width:26px" title="MELP 292ms"></div>
+                  </div>
+                </td>
+              </tr>
+              <!-- B2 Sum 1..100M: max=205ms → GCC-O0=100, GCC-O2=<1, MELP=<1 (LLVM fold=1ms) -->
+              <tr style="background:rgba(0,0,0,0.03)">
+                <td style="padding:0.45rem 0.75rem;"><strong>B2</strong> Sum 1..100M <span style="font-size:0.78rem;color:var(--text-muted);">yük taşıma döngüsü</span></td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">205 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">1 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;color:#22c55e;font-weight:600;">1 ms</td>
+                <td style="padding:0.45rem 0.75rem;">
+                  <div style="display:flex;gap:2px;align-items:center;height:8px;">
+                    <div style="background:#94a3b8;height:8px;border-radius:2px;width:100%;max-width:60px" title="GCC-O0 205ms"></div>
+                    <div style="background:#22c55e;height:8px;border-radius:2px;width:1%;max-width:1px" title="GCC-O2 1ms"></div>
+                    <div style="background:#6366f1;height:8px;border-radius:2px;width:1%;max-width:1px" title="MELP 1ms"></div>
+                  </div>
+                </td>
+              </tr>
+              <!-- B3 Collatz 100K: max=35ms → GCC-O0=100, GCC-O2=46, MELP=37 (MELP GCC-O2'den HIZLI) -->
+              <tr>
+                <td style="padding:0.45rem 0.75rem;"><strong>B3</strong> Collatz 100K <span style="font-size:0.78rem;color:var(--text-muted);">tahmin edilemez dal</span></td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">35 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">16 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;color:#22c55e;font-weight:600;">13 ms ✓</td>
+                <td style="padding:0.45rem 0.75rem;">
+                  <div style="display:flex;gap:2px;align-items:center;height:8px;">
+                    <div style="background:#94a3b8;height:8px;border-radius:2px;width:100%;max-width:60px" title="GCC-O0 35ms"></div>
+                    <div style="background:#22c55e;height:8px;border-radius:2px;width:46%;max-width:28px" title="GCC-O2 16ms"></div>
+                    <div style="background:#6366f1;height:8px;border-radius:2px;width:37%;max-width:22px" title="MELP 13ms"></div>
+                  </div>
+                </td>
+              </tr>
+              <!-- B4 Primes 100K: max=130ms (MELP) → GCC-O0=16, GCC-O2=16, MELP=100 -->
+              <tr style="background:rgba(0,0,0,0.03)">
+                <td style="padding:0.45rem 0.75rem;"><strong>B4</strong> Primes &lt;100K <span style="font-size:0.78rem;color:var(--text-muted);">modulo ağırlıklı döngü</span></td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">21 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">21 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;color:#f59e0b;font-weight:600;">130 ms</td>
+                <td style="padding:0.45rem 0.75rem;">
+                  <div style="display:flex;gap:2px;align-items:center;height:8px;">
+                    <div style="background:#94a3b8;height:8px;border-radius:2px;width:16%;max-width:10px" title="GCC-O0 21ms"></div>
+                    <div style="background:#22c55e;height:8px;border-radius:2px;width:16%;max-width:10px" title="GCC-O2 21ms"></div>
+                    <div style="background:#f59e0b;height:8px;border-radius:2px;width:100%;max-width:60px" title="MELP 130ms — optimizasyon fırsatı"></div>
+                  </div>
+                </td>
+              </tr>
+              <!-- B5 Leibniz PI 5M: max=13ms → GCC-O0=100, GCC-O2=92, MELP=85 -->
+              <tr>
+                <td style="padding:0.45rem 0.75rem;"><strong>B5</strong> Leibniz PI 5M <span style="font-size:0.78rem;color:var(--text-muted);">kayan nokta işlemleri</span></td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">13 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;">12 ms</td>
+                <td style="text-align:right;padding:0.45rem 0.75rem;font-variant-numeric:tabular-nums;color:#22c55e;font-weight:600;">11 ms ✓</td>
+                <td style="padding:0.45rem 0.75rem;">
+                  <div style="display:flex;gap:2px;align-items:center;height:8px;">
+                    <div style="background:#94a3b8;height:8px;border-radius:2px;width:100%;max-width:60px" title="GCC-O0 13ms"></div>
+                    <div style="background:#22c55e;height:8px;border-radius:2px;width:92%;max-width:55px" title="GCC-O2 12ms"></div>
+                    <div style="background:#6366f1;height:8px;border-radius:2px;width:85%;max-width:51px" title="MELP 11ms"></div>
+                  </div>
+                </td>
+              </tr>
+              <!-- TOPLAM -->
+              <tr style="border-top:2px solid var(--border);font-weight:700;">
+                <td style="padding:0.5rem 0.75rem;">TOPLAM</td>
+                <td style="text-align:right;padding:0.5rem 0.75rem;font-variant-numeric:tabular-nums;">936 ms</td>
+                <td style="text-align:right;padding:0.5rem 0.75rem;font-variant-numeric:tabular-nums;">234 ms</td>
+                <td style="text-align:right;padding:0.5rem 0.75rem;font-variant-numeric:tabular-nums;color:#6366f1;">447 ms</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Legend / notlar -->
+        <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin:1.2rem 0 0.5rem;font-size:0.82rem;color:var(--text-muted);">
+          <span><span style="color:#22c55e;font-weight:700;">✓</span> MELP, GCC -O2'den hızlı</span>
+          <span><span style="color:#f59e0b;font-weight:700;">B4</span> Primes: bilinen optimizasyon fırsatı (Stage1 hedefi)</span>
+          <span>B2: LLVM sabit-katlama → 1ms normaldir</span>
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-top:0.75rem;">
+          Ölçüm: her testi 3 kez çalıştırıp minimum süre alındı. Kaynak:
+          <code>BENCHMARK_SUITES/comprehensive_bench.sh</code> —
+          MELP native pipeline: <code>melp_compiler -O3 → llc-14 -O3 → gcc link</code>.
+        </p>
+      </div>
+    </section>
+
     <section class="cta-section">
       <h2>Hazır mısınız?</h2>
       <p>Tarayıcıda hemen deneyin — kurulum gerekmez.</p>
