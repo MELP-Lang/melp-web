@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MELP programlama dili özellik envanteri — Alfa sürümünde neler çalışıyor, neler planlanıyor.">
+  <title>Envanter — MELP</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/melp-logo.ico">
+  <link rel="icon" type="image/png" href="/assets/melp-logo.png">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    /* ── Envanter'e özgü CSS değişkenleri ─────────────────── */
+    :root {
+      --ok:       #50c878;
+      --ok-bg:    rgba(80,200,120,.12);
+      --part:     #e5c07b;
+      --part-bg:  rgba(229,192,123,.12);
+      --no:       #e06c75;
+      --no-bg:    rgba(224,108,117,.12);
+      --plan:     #61afef;
+      --plan-bg:  rgba(97,175,239,.10);
+    }
+    [data-theme="light"] {
+      --ok:       #2d7a3a;
+      --ok-bg:    rgba(45,122,58,.10);
+      --part:     #8a5a00;
+      --part-bg:  rgba(138,90,0,.10);
+      --no:       #c0392b;
+      --no-bg:    rgba(192,57,43,.10);
+      --plan:     #0277bd;
+      --plan-bg:  rgba(2,119,189,.10);
+    }
+
+    /* ── Sayfa başlığı ────────────────────────────────────── */
+    .alpha-badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      background: rgba(82,139,255,.15); color: var(--accent);
+      border: 1px solid rgba(82,139,255,.3);
+      padding: 2px 8px; border-radius: 10px; margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── Bölüm ────────────────────────────────────────────── */
+    .inv-section { margin-bottom: 40px; }
+    .inv-section-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--text-muted);
+      margin-bottom: 12px; padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Tablo ────────────────────────────────────────────── */
+    .inv-table { width: 100%; border-collapse: collapse; }
+    .inv-table thead th {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .04em; color: var(--text-muted);
+      padding: 6px 10px; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .inv-table tbody tr { border-bottom: 1px solid var(--border); }
+    .inv-table tbody tr:last-child { border-bottom: none; }
+    .inv-table tbody tr:hover { background: rgba(255,255,255,.03); }
+    [data-theme="light"] .inv-table tbody tr:hover { background: rgba(0,0,0,.03); }
+    .inv-table td { padding: 8px 10px; vertical-align: top; font-size: 13px; }
+    .inv-table td.feat {
+      font-family: 'JetBrains Mono', 'Consolas', monospace;
+      font-size: 12px; white-space: nowrap;
+      color: var(--text-primary);
+    }
+    .inv-table td.note { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+    /* ── Rozetler ─────────────────────────────────────────── */
+    .ibadge {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+    }
+    .ibadge-ok   { background: var(--ok-bg);   color: var(--ok);   border: 1px solid rgba(80,200,120,.25); }
+    .ibadge-part { background: var(--part-bg); color: var(--part); border: 1px solid rgba(229,192,123,.25); }
+    .ibadge-no   { background: var(--no-bg);   color: var(--no);   border: 1px solid rgba(224,108,117,.25); }
+    .ibadge-plan { background: var(--plan-bg); color: var(--plan); border: 1px solid rgba(97,175,239,.2); }
+
+    /* ── Legend ───────────────────────────────────────────── */
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; font-size: 12px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HEADER ========== -->
+  <header>
+    <nav>
+      <a href="index.html" class="nav-logo">
+        <img src="assets/melp-logo.svg" alt="MELP Logo" width="32" height="32">
+        MELP <span style="font-size:0.7em; font-weight:400; opacity:0.6;">(alfa)</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Ana Sayfa</a></li>
+        <li><a href="ozellikler.html">Özellikler</a></li>
+        <li><a href="kurulum.html">Kurulum</a></li>
+        <li><a href="docs.html">Dokümanlar</a></li>
+        <li><a href="inventory.html" class="active">Envanter</a></li>
+        <li><a href="https://melp-lang.github.io/melp-ide-web/" target="_blank" rel="noopener" class="btn-nav">Hemen Dene →</a></li>
+      </ul>
+      <div class="theme-toggle">
+        <button class="theme-btn" data-theme="dark" title="Koyu tema" aria-label="Koyu tema">🌙</button>
+        <button class="theme-btn" data-theme="light" title="Açık tema" aria-label="Açık tema">☀️</button>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section style="padding-top:3.5rem;padding-bottom:1rem;">
+      <span class="section-label">Envanter</span>
+      <h1 style="font-size:2.4rem;margin-bottom:0.5rem;">
+        Dil Özellik Envanteri <span class="alpha-badge">Alfa</span>
+      </h1>
+      <p class="muted">
+        MELP şu an <strong>Alfa aşamasında</strong> (v0.1.0). Aşağıdaki tablo,
+        derleyicide (STAGE0 v1.1.1, 1 Nisan 2026 itibarıyla) gerçekten çalışan
+        ve çalışmayan özellikleri gösterir.
+        Eksikler bilinçli olarak belgelenmiştir — topluluk bu durumu makul karşılayabilir.
+      </p>
+    </section>
+
+    <section>
+      <div class="legend">
+        <div class="legend-item"><span class="ibadge ibadge-ok">✅ Çalışıyor</span> Teste kanıtlanmış</div>
+        <div class="legend-item"><span class="ibadge ibadge-part">⚠️ Kısmi</span> Temel senaryo çalışıyor, edge case'ler kırık</div>
+        <div class="legend-item"><span class="ibadge ibadge-no">❌ Yok</span> Henüz desteklenmiyor</div>
+        <div class="legend-item"><span class="ibadge ibadge-plan">🗓 Planlandı</span> Beta veya sonrasında</div>
+      </div>
+
+      <!-- ── Çalışan Özellikler ─────────────────────────────── -->
+      <div class="inv-section">
+        <div class="inv-section-title">Çalışan Özellikler</div>
+        <table class="inv-table">
+          <thead>
+            <tr><th>Özellik</th><th>Durum</th><th>Notlar</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feat"><code class="inline">import</code></td>
+              <td><span class="ibadge ibadge-ok">✅ Çalışıyor</span></td>
+              <td class="note">Çok dosyalı derleme. <code class="inline">import matematikUtils</code> → <code class="inline">mod.fonksiyon()</code> akışı test edildi (10/11 geçiş).</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">module / export</code></td>
+              <td><span class="ibadge ibadge-ok">✅ Çalışıyor</span></td>
+              <td class="note"><code class="inline">module Util ... end_module</code>, namespace ile dışa aktarma çalışıyor. 4/4 test geçiyor.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">event</code></td>
+              <td><span class="ibadge ibadge-ok">✅ Çalışıyor</span></td>
+              <td class="note"><code class="inline">.mlp</code> ve <code class="inline">.mlpgui</code> dosyalarında. <code class="inline">event greet() ... end_event</code> + <code class="inline">app_start()</code> desteklenir. 10/10 test.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">struct</code></td>
+              <td><span class="ibadge ibadge-ok">✅ Çalışıyor</span></td>
+              <td class="note">Alan tanımı, alan erişimi, struct ile fonksiyon parametresi.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">match / when</code></td>
+              <td><span class="ibadge ibadge-ok">✅ Çalışıyor</span></td>
+              <td class="note">Pattern matching. Guard koşulları kısmen çalışıyor (bkz. Kısmi bölümü).</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">Result{T;E}</code></td>
+              <td><span class="ibadge ibadge-ok">✅ Çalışıyor</span></td>
+              <td class="note">Hata yönetimi için önerilen yol. 18/18 test geçiyor.</td>
+            </tr>
+            <tr>
+              <td class="feat">Lambda / HOF</td>
+              <td><span class="ibadge ibadge-ok">✅ Çalışıyor</span></td>
+              <td class="note"><code class="inline">lambda(x) -&gt; x * 2</code>, değişkene atama, <code class="inline">array_map / filter / reduce / find / foreach</code>.</td>
+            </tr>
+            <tr>
+              <td class="feat">Standart kütüphane</td>
+              <td><span class="ibadge ibadge-ok">✅ Mevcut</span></td>
+              <td class="note"><code class="inline">str(), length(), assert(), range(), sqrt(), pow(), min(), max(), abs(), clamp(), gcd(), lcm(), now_ms(), rand(), split(), to_number(), to_string(), pad_str(), format_date()</code> ve dahası.</td>
+            </tr>
+            <tr>
+              <td class="feat">Çok dilli sözdizimi</td>
+              <td><span class="ibadge ibadge-ok">✅ Çalışıyor</span></td>
+              <td class="note">Türkçe, Rusça, Arapça, İngilizce keyword desteği. Normalizer aracılığıyla.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ── Kısmen Çalışan ──────────────────────────────────── -->
+      <div class="inv-section">
+        <div class="inv-section-title">Kısmen Çalışan Özellikler</div>
+        <table class="inv-table">
+          <thead>
+            <tr><th>Özellik</th><th>Durum</th><th>Sınır</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feat"><code class="inline">try / catch / throw / finally</code></td>
+              <td><span class="ibadge ibadge-part">⚠️ Kısmi</span></td>
+              <td class="note">Temel yapı çalışıyor. Runtime istisnaları (sıfıra bölme vb.) catch'e düşmüyor. <code class="inline">error.message</code> üye erişimi eksik.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">interface / implement</code></td>
+              <td><span class="ibadge ibadge-part">⚠️ Kısmi</span></td>
+              <td class="note">33/35 test geçiyor (%94). Bazı <code class="inline">this.field</code> senaryolarında 0 dönüyor.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">operator</code> overloading</td>
+              <td><span class="ibadge ibadge-part">⚠️ Kısmi</span></td>
+              <td class="note">Temel struct operatörleri (+, -, *) çalışıyor. Karmaşık kombinasyonlarda LLVM doğrulama hatası. 2/5 test.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">async / await / spawn</code></td>
+              <td><span class="ibadge ibadge-part">⚠️ Kısmi</span></td>
+              <td class="note">Derleniyor ve senkron olarak doğru çalışıyor. Gerçek event loop / promise sistemi yok. <code class="inline">spawn</code> thread başlatır.</td>
+            </tr>
+            <tr>
+              <td class="feat">Generics <code class="inline">&lt;T&gt;</code></td>
+              <td><span class="ibadge ibadge-part">⚠️ Kısmi</span></td>
+              <td class="note">Basit <code class="inline">function identity&lt;T&gt;(x as T)</code> çalışıyor. Constraint sözdizimi (<code class="inline">T: Comparable</code>) yok. <code class="inline">{T}</code> curly brace formu çalışmıyor.</td>
+            </tr>
+            <tr>
+              <td class="feat">Match guard</td>
+              <td><span class="ibadge ibadge-part">⚠️ Kısmi</span></td>
+              <td class="note">Temel pattern matching çalışıyor. Guard koşullu pattern codegen bazı senaryolarda hatalı.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ── Henüz Çalışmayan ────────────────────────────────── -->
+      <div class="inv-section">
+        <div class="inv-section-title">Henüz Çalışmayan Özellikler</div>
+        <table class="inv-table">
+          <thead>
+            <tr><th>Özellik</th><th>Durum</th><th>Not</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feat"><code class="inline">typeof</code></td>
+              <td><span class="ibadge ibadge-no">❌ Yok</span></td>
+              <td class="note">Derleyicide handler yok. <code class="inline">typeof(x)</code> → "Unknown function" hatası verir.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">const</code></td>
+              <td><span class="ibadge ibadge-no">❌ Yok</span></td>
+              <td class="note">Yalnızca lexer'da token tanımlı, parser'da işlenmiyor. <code class="inline">const x = 42</code> hata verir.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">timer</code></td>
+              <td><span class="ibadge ibadge-no">❌ Yok</span></td>
+              <td class="note">Dil anahtar sözcüğü yok. Workaround: FFI ile C <code class="inline">sleep()</code> çağrılabilir.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ── Planlanıyor ─────────────────────────────────────── -->
+      <div class="inv-section">
+        <div class="inv-section-title">Beta ve Sonrası İçin Planlananlar</div>
+        <table class="inv-table">
+          <thead>
+            <tr><th>Özellik</th><th>Hedef</th><th>Not</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="feat"><code class="inline">typeof</code> operatörü</td>
+              <td><span class="ibadge ibadge-plan">🗓 Beta</span></td>
+              <td class="note">Runtime tip sorgusu.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">const</code> immutability</td>
+              <td><span class="ibadge ibadge-plan">🗓 Beta</span></td>
+              <td class="note">Sabit değer enforcement — derleme zamanı hatası.</td>
+            </tr>
+            <tr>
+              <td class="feat">Generics constraint</td>
+              <td><span class="ibadge ibadge-plan">🗓 Beta</span></td>
+              <td class="note"><code class="inline">T: Comparable</code>, <code class="inline">T: Numeric</code> gibi tip parametresi kısıtları.</td>
+            </tr>
+            <tr>
+              <td class="feat">Gerçek async runtime</td>
+              <td><span class="ibadge ibadge-plan">🗓 Beta / Stage 2</span></td>
+              <td class="note">Event loop, Promise sistemi, non-blocking I/O.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">try/catch</code> runtime istisna</td>
+              <td><span class="ibadge ibadge-plan">🗓 Beta</span></td>
+              <td class="note">Sıfıra bölme, null erişimi gibi runtime hatalarının catch'e düşmesi.</td>
+            </tr>
+            <tr>
+              <td class="feat"><code class="inline">timer</code></td>
+              <td><span class="ibadge ibadge-plan">🗓 Beta</span></td>
+              <td class="note">Dil düzeyinde zamanlayıcı desteği.</td>
+            </tr>
+            <tr>
+              <td class="feat">Operator overloading (tam)</td>
+              <td><span class="ibadge ibadge-plan">🗓 Beta</span></td>
+              <td class="note">Karmaşık struct kombinasyonları dahil 5/5 test geçişi.</td>
+            </tr>
+            <tr>
+              <td class="feat">Paket yöneticisi (<code class="inline">mlppkg</code>)</td>
+              <td><span class="ibadge ibadge-plan">🗓 Stage 2</span></td>
+              <td class="note">Bağımlılık yönetimi, paket yayınlama.</td>
+            </tr>
+            <tr>
+              <td class="feat">Self-hosting derleyici</td>
+              <td><span class="ibadge ibadge-plan">🗓 Stage 2</span></td>
+              <td class="note">MELP derleyicisinin MELP ile yazılması.</td>
+            </tr>
+            <tr>
+              <td class="feat">CUDA / GPU programlama</td>
+              <td><span class="ibadge ibadge-plan">🗓 Stage 3</span></td>
+              <td class="note">LLVM NVPTX backend üzerinden.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Bilinen Sınırlamalar ──────────────────────────────── -->
+    <section style="padding-top:1rem;">
+      <span class="section-label">Editör &amp; IDE</span>
+      <h2 style="font-size:1.6rem;margin-bottom:0.4rem;">Bilinen Kullanıcı Sınırlamaları</h2>
+      <p class="muted" style="margin-bottom:1.5rem;">
+        Alfa aşamasında karşılaşabileceğiniz bilinen davranışlar. Hayal kırıklığına uğramamak için okuyun.
+      </p>
+
+      <!-- VS Code Eklentisi -->
+      <div class="inv-section">
+        <div class="inv-section-title">VS Code Eklentisi</div>
+        <table class="inv-table">
+          <thead><tr><th>Durum</th><th>Sınırlama</th><th>Geçici Çözüm</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="ibadge ibadge-part">⚠️</span></td>
+              <td class="note">Hover belgesi birçok keyword için Türkçe açıklama içermiyor (<code class="inline">try/catch</code>, <code class="inline">true/false</code>, <code class="inline">and/or/not</code>, <code class="inline">exit/continue</code> vb.). İngilizce açıklama gösterilir veya hiç gösterilmez.</td>
+              <td class="note">İngilizce modda çalışın veya dil dokümanlarına bakın.</td>
+            </tr>
+            <tr>
+              <td><span class="ibadge ibadge-part">⚠️</span></td>
+              <td class="note">Generics için hover belgesi <code class="inline">{T: Comparable}</code> sözdizimini gösteriyor, ancak bu form derleyicide çalışmıyor. Doğru form: <code class="inline">&lt;T&gt;</code>.</td>
+              <td class="note">Her zaman <code class="inline">function f&lt;T&gt;(x as T)</code> formunu kullanın.</td>
+            </tr>
+            <tr>
+              <td><span class="ibadge ibadge-part">⚠️</span></td>
+              <td class="note"><code class="inline">module.fonksiyon()</code> çağrıları editörde sahte "bilinmeyen fonksiyon" uyarısı üretebiliyor. Derleme başarıyla tamamlansa da uyarı gözükür.</td>
+              <td class="note">Uyarıyı görmezden gelin — derleme sonucuna bakın.</td>
+            </tr>
+            <tr>
+              <td><span class="ibadge ibadge-no">❌</span></td>
+              <td class="note"><code class="inline">const</code> ve <code class="inline">typeof</code> yazılırken editör uyarı vermiyor. Bu iki keyword derleyicide henüz çalışmadığı için derleme hatası alırsınız.</td>
+              <td class="note">Bu iki keyword'ü kullanmayın (bkz. "Henüz Çalışmayan" bölümü).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Web IDE -->
+      <div class="inv-section">
+        <div class="inv-section-title">Web IDE (Tarayıcı İçi Derleyici)</div>
+        <table class="inv-table">
+          <thead><tr><th>Durum</th><th>Sınırlama</th><th>Geçici Çözüm</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="ibadge ibadge-no">❌</span></td>
+              <td class="note"><code class="inline">async</code> / <code class="inline">await</code> / <code class="inline">spawn</code> kullanan programlar Web IDE'de derlenemiyor. Geçersiz WASM bytecode üretiyor.</td>
+              <td class="note">Bu özellikleri yerel kurulumla (<code class="inline">melp</code> binary) test edin.</td>
+            </tr>
+            <tr>
+              <td><span class="ibadge ibadge-no">❌</span></td>
+              <td class="note"><code class="inline">enum</code> / <code class="inline">match</code> / <code class="inline">try-catch</code> kullanan programlar Web IDE'de çalışmıyor.</td>
+              <td class="note">Yerel kurulum veya VS Code eklentisiyle test edin.</td>
+            </tr>
+            <tr>
+              <td><span class="ibadge ibadge-part">⚠️</span></td>
+              <td class="note">Uzun süren veya çok çıktı üreten programlarda çıktı, program tamamlanana kadar ekranda görünmez (satır satır değil, bir seferde gelir).</td>
+              <td class="note">Kısa programlarda sorun yok. Uzun programlar için bekleyin.</td>
+            </tr>
+            <tr>
+              <td><span class="ibadge ibadge-part">⚠️</span></td>
+              <td class="note">Farklı dillerden keyword karıştırılırsa (örn. Türkçe + Rusça) editör uyarı vermiyor.</td>
+              <td class="note">Tek dil seçin ve tutarlı kalın.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Electron IDE -->
+      <div class="inv-section">
+        <div class="inv-section-title">GUI Tasarım IDE (Electron)</div>
+        <table class="inv-table">
+          <thead><tr><th>Durum</th><th>Sınırlama</th><th>Geçici Çözüm</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="ibadge ibadge-no">❌</span></td>
+              <td class="note">Özel widget tipi tanımlanamıyor. Yalnızca yerleşik widget tipleri kullanılabilir.</td>
+              <td class="note">Beta sürümünde eklenecek.</td>
+            </tr>
+            <tr>
+              <td><span class="ibadge ibadge-part">⚠️</span></td>
+              <td class="note">Panel / GroupBox için seçilen otomatik düzen (layout), proje yeniden açıldığında kaybolabilir.</td>
+              <td class="note">Düzeni her seferinde proje kaydetmeden önce kontrol edin.</td>
+            </tr>
+            <tr>
+              <td><span class="ibadge ibadge-plan">🗓</span></td>
+              <td class="note">Dışa aktarılan uygulamalar Electron/HTML tabanlıdır. GTK/Qt tabanlı native paket desteği Beta sürümünden sonra gelecek.</td>
+              <td class="note">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <p>© 2026 MELP. MIT Lisansı.</p>
+    <p style="margin-top:0.5rem;">
+      <a href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://melp.dev">melp.dev</a>
+    </p>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('navToggle');
+    const links  = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+
+    // Theme toggle
+    (function() {
+      const root  = document.documentElement;
+      const saved = localStorage.getItem('melp-theme') || 'dark';
+      root.setAttribute('data-theme', saved);
+      function sync(t) {
+        document.querySelectorAll('.theme-btn').forEach(b =>
+          b.classList.toggle('active', b.dataset.theme === t));
+      }
+      sync(saved);
+      document.querySelectorAll('.theme-btn').forEach(btn =>
+        btn.addEventListener('click', () => {
+          const t = btn.dataset.theme;
+          root.setAttribute('data-theme', t);
+          localStorage.setItem('melp-theme', t);
+          sync(t);
+        })
+      );
+    })();
+  </script>
+
+</body>
+</html>
