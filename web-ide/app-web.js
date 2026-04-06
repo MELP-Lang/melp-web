@@ -720,9 +720,7 @@ async function compile(andRun = false) {
 function _setRunning(running) {
   const btnRun    = $('btn-run');
   const btnStop   = $('btn-stop');
-  const btnCompile = $('btn-compile');
   if (btnRun)     btnRun.disabled    = running;
-  if (btnCompile) btnCompile.disabled = running;
   if (btnStop)    btnStop.style.display = running ? '' : 'none';
 }
 
@@ -822,7 +820,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('btn-new').addEventListener('click', newFile);
   $('btn-open').addEventListener('click', openFileFromDisk);
   $('btn-save').addEventListener('click', saveFile);
-  $('btn-compile').addEventListener('click', () => compile(false));
+  $('btn-compile') && $('btn-compile').addEventListener('click', () => compile(false));
   $('btn-run').addEventListener('click', () => compile(true));
   if ($('btn-stop')) $('btn-stop').addEventListener('click', () => backend.cancel());
   $('btn-close-output').addEventListener('click', () => $('output-panel').classList.add('hidden'));
@@ -834,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (ctrl && e.key === 'n')  { e.preventDefault(); newFile(); }
     if (ctrl && e.key === 'o')  { e.preventDefault(); openFileFromDisk(); }
     if (e.key  === 'F5')        { e.preventDefault(); await compile(true); }
-    if (ctrl && e.key === 'b')  { e.preventDefault(); await compile(false); }
+    if (ctrl && e.key === 'b')  { e.preventDefault(); /* Derle butonu kaldırıldı */ }
     if (e.key  === 'Escape')    { $('output-panel').classList.add('hidden'); }
   });
 

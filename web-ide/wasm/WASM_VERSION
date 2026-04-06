@@ -1,0 +1,11 @@
+1.2.4
+2026-04-03
+build_date: 2026-04-03
+source: STAGE0/compiler/stage1/modules/wasm/wasm_codegen.cpp
+size_wasm: 616K
+size_js: 72K
+emcc: 3.1.69
+features: if,while,for,loop,struct,array,break,continue,binary_op,unary_op,function_call,print,enum,match,try_catch,lambda,spawn,string_concat
+known_issues: string+numeric mixed concat → invalid WASM (see PD_ESKALASYON_STRING_NUMERIC_CONCAT_BUG.md)
+missing: alertbox,timer_sleep
+notes: fib(40) ~1-2s in browser; timeout koruması app-web.js'te mevcut (10s)

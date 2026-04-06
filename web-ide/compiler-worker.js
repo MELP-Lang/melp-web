@@ -40,7 +40,6 @@ async function loadMelpModule() {
 }
 
 async function execWasm(wasmBytes) {
-  let stdout = '';
   const importObject = {
     wasi_snapshot_preview1: {
       fd_write(fd, iovPtr, iovCnt, nwrittenPtr) {
@@ -50,7 +49,8 @@ async function execWasm(wasmBytes) {
           const base  = mem.getUint32(iovPtr + i * 8,     true);
           const len   = mem.getUint32(iovPtr + i * 8 + 4, true);
           const bytes = new Uint8Array(instance.exports.memory.buffer, base, len);
-          stdout += new TextDecoder().decode(bytes);
+          const chunk = new TextDecoder().decode(bytes);
+          self.postMessage({ type: 'run-stdout', stdout: chunk });
           written += len;
         }
         mem.setUint32(nwrittenPtr, written, true);
@@ -75,10 +75,10 @@ async function execWasm(wasmBytes) {
     }
   } catch (e) {
     if (e && typeof e.exitCode !== 'undefined' && e.exitCode !== 0) {
-      return { stdout, stderr: `exit code ${e.exitCode}`, exitCode: e.exitCode };
+      return { stderr: `exit code ${e.exitCode}`, exitCode: e.exitCode };
     }
   }
-  return { stdout, stderr: '', exitCode: 0 };
+  return { stderr: '', exitCode: 0 };
 }
 
 async function handleCompile(code, run) {
@@ -126,7 +126,6 @@ async function handleCompile(code, run) {
 
   if (_cancelled) { self.postMessage({ type: 'run-cancel' }); return; }
 
-  if (result.stdout) self.postMessage({ type: 'run-stdout', stdout: result.stdout });
   if (result.stderr) self.postMessage({ type: 'run-stderr', stderr: result.stderr });
   self.postMessage({ type: 'run-exit', exitCode: result.exitCode });
 }
