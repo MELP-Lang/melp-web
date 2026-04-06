@@ -48,7 +48,7 @@
       <div class="tabs">
         <div class="tab-nav">
           <button class="tab-btn active" data-tab="webide">🌐 Web IDE (Kurulmsuz)</button>
-          <button class="tab-btn" data-tab="electron">🖥️ Electron IDE</button>
+          <button class="tab-btn" data-tab="electron" disabled style="opacity:0.5;cursor:not-allowed;">🖥️ Electron IDE <span style="font-size:0.75rem;font-weight:600;color:#a78bfa;">(Yakında)</span></button>
           <button class="tab-btn" data-tab="vscode">🧩 VS Code Uzantısı</button>
           <button class="tab-btn" data-tab="cli">💻 CLI (Yerel)</button>
         </div>
@@ -96,59 +96,13 @@
 
         <!-- TAB 2: ELECTRON IDE -->
         <div class="tab-pane" id="tab-electron">
-          <div class="section-header" style="text-align:left;margin-bottom:2rem;">
-            <h2 style="font-size:1.6rem;">Electron IDE — Masaüstü GUI Tasarımcısı</h2>
-            <p>Sürükle-bırak, görsel form tasarımı ve otomatik MELP kodu üretimi.</p>
-          </div>
-
-          <div class="cards-grid" style="margin-bottom:2rem;">
-            <div class="card">
-              <div class="card-icon">🎨</div>
-              <h3>Görsel Form Tasarımı</h3>
-              <p>Widget'ları sürükleyip bırakarak GUI oluşturun — Visual Studio tarzı arayüz.</p>
-            </div>
-            <div class="card">
-              <div class="card-icon">⚙️</div>
-              <h3>Otomatik Kod Üretimi</h3>
-              <p>Tasarladığınız formdan MELP kodu otomatik oluşturulur.</p>
-            </div>
-            <div class="card">
-              <div class="card-icon">🌙</div>
-              <h3>Koyu Tema</h3>
-              <p>Göz yormayan profesyonel dark theme ile tam gün çalışın.</p>
-            </div>
-          </div>
-
-          <div class="install-step">
-            <div class="step-num">1</div>
-            <div class="install-step-content">
-              <h3>Depoyu Klonlayın</h3>
-              <pre><code>git clone https://github.com/MELP-Lang/MELP.git
-cd MELP/EDITORS/ELECTRON</code></pre>
-            </div>
-          </div>
-
-          <div class="install-step">
-            <div class="step-num">2</div>
-            <div class="install-step-content">
-              <h3>Bağımlılıkları Yükleyin</h3>
-              <pre><code>npm install</code></pre>
-            </div>
-          </div>
-
-          <div class="install-step">
-            <div class="step-num">3</div>
-            <div class="install-step-content">
-              <h3>Çalıştırın</h3>
-              <pre><code>npm start</code></pre>
-            </div>
-          </div>
-
-          <div class="info-box">
-            <p>
-              <strong>Versiyon:</strong> 0.1.0 &nbsp;·&nbsp;
-              <strong>Platform:</strong> Linux x86_64 (macOS ve Windows desteği beta sürümünden sonra planlanmıştır.)
+          <div style="text-align:center;padding:4rem 2rem;">
+            <div style="font-size:3rem;margin-bottom:1rem;">🖥️</div>
+            <h2 style="font-size:1.8rem;margin-bottom:1rem;">Electron IDE</h2>
+            <p style="color:var(--text-muted);font-size:1.1rem;max-width:480px;margin:0 auto 2rem;">
+              Masaüstü GUI tasarımcısı — sürükle-bırak form editörü, otomatik MELP kodu üretimi. Yakında yayında.
             </p>
+            <span class="badge badge-yellow" style="font-size:1rem;padding:0.4rem 1.2rem;">Yakında</span>
           </div>
         </div>
 
