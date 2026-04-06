@@ -288,6 +288,7 @@
       user-select: none; border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
     #titlebar .tb-logo { font-weight: bold; font-size: 13px; color: #528bff; margin-right: 8px; text-decoration: none; }
+    #titlebar .tb-logo .beta-badge { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #e5c07b; background: rgba(229,192,123,.15); border: 1px solid rgba(229,192,123,.35); border-radius: 3px; padding: 1px 4px; vertical-align: middle; margin-left: 3px; }
     .tb-btn {
       background: var(--btn-bg); border: 1px solid var(--btn-border);
       color: var(--fg); padding: 3px 10px; border-radius: 4px;
@@ -484,7 +485,7 @@
 
   <!-- ── TITLEBAR ────────────────────────────────────────────────────────── -->
   <div id="titlebar">
-    <a class="tb-logo" href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener noreferrer">◈ MELP</a>
+    <a class="tb-logo" href="https://github.com/MELP-Lang/MELP" target="_blank" rel="noopener noreferrer">◈ MELP <span class="beta-badge">beta</span></a>
     <button class="tb-btn" id="btn-new"     title="Yeni (Ctrl+N)">+ Yeni</button>
     <button class="tb-btn" id="btn-open"    title="Dosya Aç (Ctrl+O)">📄 Aç</button>
     <button class="tb-btn" id="btn-save"    title="İndir (Ctrl+S)">💾 Kaydet</button>
