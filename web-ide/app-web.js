@@ -46,7 +46,7 @@ const backend = {
     return new Promise((resolve) => {
       const worker = _getWorker();
       this._pendingResolve = resolve;
-      let stdout = '';
+      let hadOutput = false;
       let stderr = '';
       let compileSize = 0;
 
@@ -81,22 +81,22 @@ const backend = {
               this._terminate(
                 `⏱ Zaman aşımı: program ${RUN_TIMEOUT_MS / 1000} saniyede tamamlanamadı.\n` +
                 `Not: Web IDE, LLVM optimizasyonu olmayan ham WASM backend kullanır.\n` +
-                `Rekürsif fib(n>30) gibi O(2^n) hesaplamalar çok yavaş çalışır.\n` +
-                `Ayrıntı: https://melp.dev/roadmap (WASM backend iyileştirme planı)`
+                `Rekürsif fib(n>45) gibi O(2^n) hesaplamalar çok yavaş çalışır.`
               );
             }, RUN_TIMEOUT_MS);
             break;
           case 'run-stdout':
-            stdout += msg.stdout;
+            processStdout(msg.stdout);
+            hadOutput = true;
             break;
           case 'run-stderr':
             stderr += msg.stderr;
             break;
           case 'run-exit':
-            done({ stdout, stderr, exitCode: msg.exitCode });
+            done({ hadOutput, stderr, exitCode: msg.exitCode });
             break;
           case 'run-cancel':
-            done({ stdout, stderr: stderr || '⛔ İptal edildi', exitCode: -1 });
+            done({ hadOutput, stderr: stderr || '⛔ İptal edildi', exitCode: -1 });
             break;
         }
       };
@@ -129,7 +129,7 @@ const state = {
   editor:     null,
   modified:   false,
   tabs:       [],
-  activeTab:  null,  lang:       localStorage.getItem('melp-lang')   || 'english',
+  activeTab:  null,  lang:       localStorage.getItem('melp-lang')   || 'turkish',
   syntax:     localStorage.getItem('melp-syntax') || 'mlp',};
 
 // ── DOM ────────────────────────────────────────────────────────────────────
@@ -144,13 +144,13 @@ const validationEl    = $('validation-status');
 
 // ── Editör başlat ──────────────────────────────────────────────────────────
 const DEFAULT_CONTENT =
-`#lang english
+`#lang turkish
 #syntax mlp
 
 -- Merhaba, MELP!
-function main()
-    print("Merhaba, Dünya!")
-end function
+fonksiyon giriş()
+    yaz("Merhaba, Dünya!")
+fonksiyon sonu
 `;
 
 // ── #lang / #syntax direktif yardımcıları ─────────────────────────────────────
@@ -173,7 +173,7 @@ function parseAndStripDirectives(code) {
 }
 
 function buildDirectiveHeader(lang, syntax) {
-  return `#lang ${lang || 'english'}\n#syntax ${syntax || 'mlp'}\n`;
+  return `#lang ${lang || 'turkish'}\n#syntax ${syntax || 'mlp'}\n`;
 }
 
 // Editördeki direktiflerden dropdown + state.lang/syntax güncelle (setValue yok)
@@ -461,8 +461,8 @@ const EXAMPLES = [
       russian: 'Фибоначчи', arabic: 'فيبوناتشي', chinese: '斐波那契',
     },
     codes: {
-      default: `-- Note: recursive fib(n>30) is slow in WASM (unoptimized backend)\nnumeric function fibonacci(numeric n)\n    if n <= 1 then\n        return n\n    end if\n    return fibonacci(n - 1) + fibonacci(n - 2)\nend function\n\nfunction main()\n    loop i = 0 to 9\n        print(fibonacci(i))\n    end loop\nend function\n`,
-      turkish: `-- Not: rekürsif fib(n>30) WASM'da yavaştır (optimize edilmemiş backend)\nsayısal fonksiyon fibonacci(sayısal n)\n    koşul n <= 1 ise\n        döndür n\n    koşul sonu\n    döndür fibonacci(n - 1) + fibonacci(n - 2)\nfonksiyon sonu\n\nfonksiyon giriş()\n    döngü i = 0 kadar 9\n        yaz(fibonacci(i))\n    döngü sonu\nfonksiyon sonu\n`,
+      default: `-- Note: recursive fib(n>45) is slow in WASM (unoptimized backend)\nnumeric function fibonacci(numeric n)\n    if n <= 1 then\n        return n\n    end if\n    return fibonacci(n - 1) + fibonacci(n - 2)\nend function\n\nfunction main()\n    loop i = 0 to 9\n        print(fibonacci(i))\n    end loop\nend function\n`,
+      turkish: `-- Not: rekürsif fib(n>45) WASM'da yavaştır (optimize edilmemiş backend)\nsayısal fonksiyon fibonacci(sayısal n)\n    koşul n <= 1 ise\n        döndür n\n    koşul sonu\n    döndür fibonacci(n - 1) + fibonacci(n - 2)\nfonksiyon sonu\n\nfonksiyon giriş()\n    döngü i = 0 kadar 9\n        yaz(fibonacci(i))\n    döngü sonu\nfonksiyon sonu\n`,
     },
   },
   {
@@ -710,8 +710,7 @@ async function compile(andRun = false) {
   _setRunning(false);
 
   if (json.stderr) appendOutput(json.stderr + '\n');
-  if (json.stdout) processStdout(json.stdout);
-  if (!json.stderr && !json.stdout) appendOutput('(çıktı yok)\n');
+  if (!json.stderr && !json.hadOutput) appendOutput('(çıktı yok)\n');
 
   const ok = json.exitCode === 0;
   setStatus(ok ? '✅ Başarılı' : (json.exitCode === -1 ? '⛔ Durduruldu' : '❌ Derleme hatası'));
