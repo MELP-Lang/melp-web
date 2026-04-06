@@ -228,7 +228,7 @@ function buildDisplayText(lang) {
   try {
     const defaults = MelpEditor.getDefaultKeywords ? MelpEditor.getDefaultKeywords(lang) : {};
     if (!defaults || Object.keys(defaults).length === 0) {
-      return '-- Bu dil kanonik dildir (English).\n-- Keyword dönüşümü gerekmez.\n-- Farklı bir dil seçip tekrar açın.';
+      return '-- Bu dil kanonik dildir (Türkçe).\n-- Keyword dönüşümü gerekmez.\n-- Farklı bir dil seçip tekrar açın.';
     }
     // defaults: {canonical → alias}  örn. {"if": "koşul"}
     const byCanonical = {};
@@ -257,7 +257,7 @@ function applyCustomKeywords(lang) {
 }
 
 function applyAllSavedCustomMaps() {
-  ['turkish','russian','arabic','chinese'].forEach(applyCustomKeywords);
+  ['turkish','english','russian','arabic','chinese'].forEach(applyCustomKeywords);
 }
 
 // ── Doğrulama (Validation Pipeline Adım 1-3) ────────────────────────────────
@@ -586,7 +586,7 @@ const EXAMPLES = [
   },
 ];
 
-const LANG_DISPLAY = { english:'English', turkish:'Türkçe', russian:'Русский', arabic:'العربية', chinese:'中文' };
+const LANG_DISPLAY = { turkish:'Türkçe', russian:'Русский', arabic:'العربية', chinese:'中文', english:'English' };
 const SYN_DISPLAY  = { mlp:'MLP', pmpl:'MLP', vbnet:'VB.NET', python_style:'Python', c_style:'C/C++', go_style:'Go' };
 
 function getExampleLabel(ex) {
@@ -661,14 +661,13 @@ async function compile(andRun = false) {
 
   let code = clean;
   let normInfo = '';
-  // Normalleştirme: Türkçe/VBNet vb. → MELP standart sözdizimi
-  if (effectiveLang !== 'english' || (effectiveSyntax !== 'mlp' && effectiveSyntax !== 'pmpl')) {
-    try {
-      code = MelpEditor.normalize(code, effectiveLang, effectiveSyntax);
-      normInfo = `🔄 Normalleştirme: dil=${effectiveLang} | sözdizimi=${effectiveSyntax}\n`;
-    } catch (e) {
-      // Normalizer bulunamazsa devam et
-    }
+  // Normalleştirme: Türkçe kanonik dil — tüm diller (İngilizce dahil) normalleştirilir.
+  // İngilizce için keywords:{} dolayısıyla identity (pass-through); Türkçe TR→EN çevirir.
+  try {
+    code = MelpEditor.normalize(code, effectiveLang, effectiveSyntax);
+    normInfo = `🔄 Normalleştirme: dil=${effectiveLang} | sözdizimi=${effectiveSyntax}\n`;
+  } catch (e) {
+    // Normalizer bulunamazsa devam et
   }
 
   // Stage 0 WASM derleyici `end_X` (alt çizgili) formunu bekler.
@@ -906,9 +905,11 @@ document.addEventListener('DOMContentLoaded', () => {
   function openLangModal() {
     const lang = state.lang;
     modalTitle.textContent = 'Dili Özelleştir — ' + (langSel.options[langSel.selectedIndex]?.text || lang);
-    customTextarea.value = buildDisplayText(lang);
-    // English için: textarea salt okunur, Kaydet gizli
-    const isCanonical = (lang === 'english');
+    // Türkçe kanonik dildir — salt okunur, Kaydet gizli
+    const isCanonical = (lang === 'turkish');
+    customTextarea.value = isCanonical
+      ? '-- Türkçe kanonik dildir.\n-- Keyword dönüşümü gerekmez.\n-- Farklı bir dil seçip tekrar açın.'
+      : buildDisplayText(lang);
     customTextarea.readOnly = isCanonical;
     customTextarea.style.opacity = isCanonical ? '0.55' : '1';
     if (modalSave) modalSave.style.display = isCanonical ? 'none' : '';
