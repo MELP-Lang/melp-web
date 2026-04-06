@@ -589,6 +589,47 @@ const EXAMPLES = [
 const LANG_DISPLAY = { turkish:'Türkçe', russian:'Русский', arabic:'العربية', chinese:'中文', english:'English' };
 const SYN_DISPLAY  = { mlp:'MLP', pmpl:'MLP', vbnet:'VB.NET', python_style:'Python', c_style:'C/C++', go_style:'Go' };
 
+// ── Dil Özelleştir modal metinleri (dile göre) ─────────────────────────────
+const MODAL_I18N = {
+  turkish: {
+    title:       lang => 'Dili Özelleştir — ' + (LANG_DISPLAY[lang] || lang),
+    hint:        'Her satıra bir eşleşme: <code>canonical = senin_kelimen</code><br>Örnek: <code>print = yaz</code>&nbsp;&nbsp;<code>main = ana</code>&nbsp;&nbsp;<code>numeric = sayı</code><br>Boş veya tanınmayan bir canonical kaydedilmez — varsayılan korunur.',
+    placeholder: 'print = yaz\nmain = ana\nif = eğer',
+    save:        '💾 Kaydet',
+    cancel:      'İptal',
+    canonical:   '-- Türkçe kanonik dildir.\n-- Keyword dönüşümü gerekmez.\n-- Farklı bir dil seçip tekrar açın.',
+  },
+  english: {
+    title:       lang => 'Customize Language — ' + (LANG_DISPLAY[lang] || lang),
+    hint:        'One mapping per line: <code>canonical = your_keyword</code><br>Example: <code>print = out</code>&nbsp;&nbsp;<code>main = start</code>&nbsp;&nbsp;<code>numeric = num</code><br>Unknown or empty canonicals are ignored — defaults are kept.',
+    placeholder: 'print = out\nmain = start\nif = when',
+    save:        '💾 Save',
+    cancel:      'Cancel',
+    canonical:   '-- English keywords are sent directly to the compiler.\n-- No keyword mapping needed.\n-- Select a different language to customize.',
+  },
+  russian: {
+    title:       lang => 'Настроить язык — ' + (LANG_DISPLAY[lang] || lang),
+    hint:        'По одному на строку: <code>canonical = ваше_слово</code><br>Пример: <code>print = вывод</code>&nbsp;&nbsp;<code>main = главная</code>&nbsp;&nbsp;<code>numeric = число</code><br>Неизвестные или пустые canonical игнорируются — значения по умолчанию сохраняются.',
+    placeholder: 'print = вывод\nmain = главная\nif = если',
+    save:        '💾 Сохранить',
+    cancel:      'Отмена',
+  },
+  arabic: {
+    title:       lang => 'تخصيص اللغة — ' + (LANG_DISPLAY[lang] || lang),
+    hint:        'تعيين واحد في كل سطر: <code>canonical = كلمتك</code><br>مثال: <code>print = اطبع</code>&nbsp;&nbsp;<code>main = رئيسي</code>&nbsp;&nbsp;<code>numeric = رقمي</code><br>القيم الفارغة أو غير المعروفة تُتجاهل — يتم الاحتفاظ بالافتراضيات.',
+    placeholder: 'print = اطبع\nmain = رئيسي\nif = إذا',
+    save:        '💾 حفظ',
+    cancel:      'إلغاء',
+  },
+  chinese: {
+    title:       lang => '自定义语言 — ' + (LANG_DISPLAY[lang] || lang),
+    hint:        '每行一个映射：<code>canonical = 你的关键词</code><br>示例：<code>print = 打印</code>&nbsp;&nbsp;<code>main = 主函数</code>&nbsp;&nbsp;<code>numeric = 数值</code><br>空值或未知的 canonical 将被忽略——保留默认值。',
+    placeholder: 'print = 打印\nmain = 主函数\nif = 如果',
+    save:        '💾 保存',
+    cancel:      '取消',
+  },
+};
+
 function getExampleLabel(ex) {
   return ex.labels[state.lang] || ex.labels.english;
 }
@@ -904,17 +945,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openLangModal() {
     const lang = state.lang;
-    modalTitle.textContent = 'Dili Özelleştir — ' + (langSel.options[langSel.selectedIndex]?.text || lang);
+    const i18n = MODAL_I18N[lang] || MODAL_I18N.english;
+
+    modalTitle.textContent = i18n.title(lang);
+
+    const hintEl = document.querySelector('.modal-hint');
+    if (hintEl) hintEl.innerHTML = i18n.hint;
+
+    if (modalSave)   modalSave.textContent   = i18n.save;
+    if (modalCancel) modalCancel.textContent = i18n.cancel;
+
     // Türkçe kanonik dildir; İngilizce WASM'e doğrudan gider — her ikisi de salt okunur
     const isCanonical = (lang === 'turkish' || lang === 'english');
-    let canonicalMsg = '';
-    if (lang === 'turkish') {
-      canonicalMsg = '-- Türkçe kanonik dildir.\n-- Keyword dönüşümü gerekmez.\n-- Farklı bir dil seçip tekrar açın.';
-    } else if (lang === 'english') {
-      canonicalMsg = '-- English keywords are sent directly to the compiler.\n-- No keyword mapping needed.\n-- Select a different language to customize.';
-    }
-    customTextarea.value = isCanonical ? canonicalMsg : buildDisplayText(lang);
-    customTextarea.readOnly = isCanonical;
+    customTextarea.value       = isCanonical ? (i18n.canonical || '') : buildDisplayText(lang);
+    customTextarea.placeholder = i18n.placeholder || '';
+    customTextarea.readOnly    = isCanonical;
     customTextarea.style.opacity = isCanonical ? '0.55' : '1';
     if (modalSave) modalSave.style.display = isCanonical ? 'none' : '';
     modalOverlay.classList.remove('hidden');
